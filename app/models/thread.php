@@ -1,14 +1,14 @@
 <?php
 class Thread extends AppModel                    
 {
-    public static function getAll()                
+    public static function getAll($offset, $limit)                
     {
-        $threads = array();            
+        $threads = array();
         $db = DB::conn();
-        $rows = $db->rows('SELECT * FROM thread');
-        
-        foreach ($rows as $row) {                    
-           $threads[] = new self($row);
+        $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
+
+        foreach($rows as $row) {
+            $threads[] = new self($row);
         }
         return $threads;
     }                        
@@ -76,6 +76,12 @@ class Thread extends AppModel
         $this->id = $db->lastInsertId();
         $this->write($comment);          
         $db->commit();
-    }         
+    }    
+    
+    public static function countAll()
+    {
+        $db = DB::conn();
+        return (int) $db->value("SELECT COUNT(*) FROM thread");
+    }     
 }
 

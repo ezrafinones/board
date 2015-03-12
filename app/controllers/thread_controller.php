@@ -3,9 +3,18 @@ class ThreadController extends AppController
 {
     public function index()                        
     {
-        $threads = Thread::getAll();
-        // TODO: Get all threads            
-       $this->set(get_defined_vars());
+        //$threads = Thread::getAll();          
+        $page = Param::get('page', 1);
+        $per_page = 2;
+
+        $pagination = new SimplePagination($page, $per_page);
+
+        $threads = Thread::getAll($pagination->start_index - 1, $pagination->count + 1);
+        $pagination->checkLastPage($threads);
+
+        $total = Thread::countAll();
+        $pages = ceil($total / $per_page);
+        $this->set(get_defined_vars());
     }
 
     public function view()
@@ -33,7 +42,6 @@ class ThreadController extends AppController
                 $page = 'write';
             }
             break;         
-            
         default:
             throw new NotFoundException("{$page} is not found");    
             break;
