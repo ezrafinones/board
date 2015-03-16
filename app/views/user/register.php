@@ -1,5 +1,11 @@
 <h1>User Registration</h1>
 
+<?php if ($error): ?>
+    <div class="alert alert-block">                
+        <h4 class="alert-heading">You have already an existing account</h4>
+    </div>
+<?php endif ?>
+
 <?php if ($userinfo->hasError()): ?>
     <div class="alert alert-block">                
         <h4 class="alert-heading">Validation error!</h4>

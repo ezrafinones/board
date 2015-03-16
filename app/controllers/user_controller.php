@@ -6,6 +6,7 @@ class UserController extends AppController
         $userinfo = new UserInfo;
         $user = new User;
         $page = Param::get('page_next','register');
+        $error = false;
 
         switch ($page) {
             case 'register':
@@ -33,6 +34,7 @@ class UserController extends AppController
                 }
                 catch (ValidationException $e) {
                     $page = 'register';
+                    $error = true;
                 }
                 break;
             default:

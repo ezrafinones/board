@@ -29,8 +29,16 @@ class User extends AppModel
                         'username' => $this->username,  
                         'password'=> md5($this->password),  
         );   
-        $db->insert('user',$params);
-        $db->commit();
+
+        $row = $db->row('SELECT * FROM user WHERE username = ?', array($this->username));
+        if (!$row) {
+            $db->insert('user',$params);
+            $db->commit();     
+        } 
+        else
+        {
+            throw new RecordFoundException('Record Found');
+        }
     }
     
     public function login()
@@ -39,7 +47,7 @@ class User extends AppModel
         if ($this->hasError()){
             throw new ValidationException('invalid input');
         }
-        
+
         $db = DB::conn();   
         $db->begin();
         $params = array($this->username, md5($this->password));       
