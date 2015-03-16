@@ -47,14 +47,29 @@ class UserController extends AppController
     {
         $user = new User;
         $page = Param::get('page_next','login');
+        $error = false;
+
+        if (isset($_SESSION['username'])) {
+            redirect('/user/profile');
+        }
 
         switch ($page) {
             case 'login':
                 break;
-            case 'user_profile':
-                $user->firstname = Param::get('firstname');
-                $user->lastname = Param::get('lastname');
-                $user->login();
+            case 'write_end':
+                $user->username = Param::get('username');
+                $user->password = Param::get('password');
+                
+                try {
+                    $user->login();
+                }
+                catch (ValidationException $e) {
+                    $page = 'login';
+                    $error = true;
+                }
+                if(!$error){
+                    redirect('/user/profile');
+                }
                 break;
             default:
                 throw new NotFoundException("{$page} is not found");    
@@ -69,6 +84,20 @@ class UserController extends AppController
         if ($isMatch) {
             return true;
         }
+    }
+
+    public function profile()
+    {
+        if (!isset($_SESSION['username'])){
+            redirect('/');
+        }
+        $this->set(get_defined_vars());
+    }
+
+    public function logout()
+    {
+        session_destroy();
+        redirect('/');
     }
 }
 

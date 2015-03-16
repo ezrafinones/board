@@ -3,7 +3,7 @@
 <?php if ($userinfo->hasError()): ?>
     <div class="alert alert-block">                
         <h4 class="alert-heading">Validation error!</h4>
-     
+
         <?php if (!empty($userinfo->validation_errors['firstname']['length'])): ?>            
             <div><em>First Name</em> must be
             between                
