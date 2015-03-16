@@ -40,11 +40,8 @@
                 <?php eh($userinfo->validation['password']['length'][2]) ?> characters in length.          
             </div>            
         <?php endif ?>
-          <?php if (!empty($userinfo->validation_errors['validate_password']['length'])): ?>             
-            <div><em>Password</em> must be
-                between 
-                <?php eh($userinfo->validation['validate_password']['length'][1]) ?> and                    
-                <?php eh($userinfo->validation['validate_password']['length'][2]) ?> characters in length.          
+          <?php if (!empty($userinfo->validation_errors['password']['match'])): ?>             
+            <div><em>Password did not match </em>                            
             </div>            
         <?php endif ?>
     </div>                    

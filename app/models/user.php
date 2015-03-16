@@ -2,8 +2,9 @@
 class User extends AppModel                    
 {
     public function register(UserInfo $userinfo)                    
-    {
-        if(!$userinfo->validate()){
+    {   
+        $userinfo->validate();
+        if($userinfo->hasError()){
             throw new ValidationException('invalid comment');
         }
 
@@ -21,7 +22,7 @@ class User extends AppModel
     
     public static function login()
     {
-        $db = DB::conn();
-                      
+        $db = DB::conn();                 
     }
+
 }
