@@ -24,18 +24,19 @@ class Thread extends AppModel
         return new self($row);
     }
 
-    public function getComments()
+    public static function getComments($offset, $limit, $id)
     {
         $comments = array();              
         $db = DB::conn();
-        $rows = $db->rows('SELECT * FROM comment 
-                        WHERE thread_id = ? ORDER BY created ASC', array($this->id));
-                    
+       // $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
+        $rows = $db->rows("SELECT * FROM comment 
+                        WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));             
         foreach ($rows as $row) {                        
            $comments[] = new Comment($row);
         }        
         return $comments;
-    }    
+    }  
+
     public function write(Comment $comment)                    
     {
         if (!$comment->validate()) {                        
@@ -82,6 +83,12 @@ class Thread extends AppModel
     {
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM thread");
-    }     
+    }
+
+    public static function countComments($thread_id)
+    {
+        $db = DB::conn();
+        return (int) $db->value("SELECT COUNT(*) FROM comment WHERE thread_id = ?",array($thread_id));
+    }       
 }
 
