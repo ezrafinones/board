@@ -1,6 +1,6 @@
 <ul class="nav nav-pills">
-    <li class="active"><a href="#">Home</a></li>
-    <li><a href="/thread/index">Profile</a></li>
+    <li class="active"><a href="#">Profile</a></li>
+    <li><a href="/thread/index">Threads</a></li>
     <li><a href="/user/logout">Logout</a></li>
 </ul>
 

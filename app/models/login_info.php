@@ -1,10 +1,10 @@
 <?php
-class Comment extends AppModel
+class LoginInfo extends AppModel
 {
     const MIN_LENGTH = 1;
 
     const MAX_USERNAME_LENGTH = 30;
-    const MAX_BODY_LENGTH = 254;
+    const MAX_PASSWORD_LENGTH = 254;
 
     public $validation = array(
         'username' => array(
@@ -12,9 +12,9 @@ class Comment extends AppModel
                 'validate_between', self::MIN_LENGTH, self::MAX_USERNAME_LENGTH,
             ),
         ),
-        'body' => array(
+        'password' => array(
             'length' => array(
-                'validate_between', self::MIN_LENGTH, self::MAX_BODY_LENGTH,
+                'validate_between', self::MIN_LENGTH, self::MAX_PASSWORD_LENGTH,
             ),
         ),
     );

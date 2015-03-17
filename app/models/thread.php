@@ -1,7 +1,18 @@
 <?php
-class Thread extends AppModel                    
+class Thread extends AppModel
 {
-    public static function getAll($offset, $limit)                
+    const MIN_TITLE_LENGTH = 1;
+    const MAX_TITLE_LENGTH = 30;
+
+    public $validation = array(
+       'title' => array(
+            'length' => array(
+               'validate_between', self::MIN_TITLE_LENGTH, self::MAX_TITLE_LENGTH,
+            ),
+        ),
+    );
+
+    public static function getAll($offset, $limit)
     {
         $threads = array();
         $db = DB::conn();
@@ -11,12 +22,12 @@ class Thread extends AppModel
             $threads[] = new self($row);
         }
         return $threads;
-    }                        
+    }
 
-    public static function get($id)                
+    public static function get($id)
     {
         $db = DB::conn();
-        $row = $db->row('SELECT * FROM thread WHERE id = ?', array($id));  
+        $row = $db->row('SELECT * FROM thread WHERE id = ?', array($id));
 
         if (!$row) {
            throw new RecordNotFoundException('no record found');
@@ -26,45 +37,37 @@ class Thread extends AppModel
 
     public static function getComments($offset, $limit, $id)
     {
-        $comments = array();              
+        $comments = array();
         $db = DB::conn();
-       // $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
         $rows = $db->rows("SELECT * FROM comment 
-                        WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));             
-        foreach ($rows as $row) {                        
+                        WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
+       
+        foreach ($rows as $row) {
            $comments[] = new Comment($row);
         }        
         return $comments;
-    }  
+    }
 
-    public function write(Comment $comment)                    
+    public function write(Comment $comment)
     {
-        if (!$comment->validate()) {                        
+        if (!$comment->validate()) {
            throw new ValidationException('invalid comment');
-        } 
+        }
 
         $db = DB::conn();
         $db->query('INSERT INTO comment 
-                SET thread_id = ?, username = ?, body = ?, created = NOW()', 
-                array($this->id, $comment->username, $comment->body));                    
-    }  
+                SET thread_id = ?, username = ?, body = ?, created = NOW()',
+                array($this->id, $comment->username, $comment->body));
+    }
 
-    public $validation = array(      
-       'title' => array(
-            'length' => array(            
-               'validate_between', 1, 30,
-            ),        
-        ),
-    );                
-
-    public function create(Comment $comment)                    
+    public function create(Comment $comment)
     {
         $this->validate();
         $comment->validate();
-        if ($this->hasError() || $comment->hasError()) {                    
+        if ($this->hasError() || $comment->hasError()) {
            throw new ValidationException('invalid thread or comment');
         }
-                    
+
         $db = DB::conn();
         $db->begin();
 
@@ -73,11 +76,10 @@ class Thread extends AppModel
         );
 
         $db->insert('thread', $params);
-        //$db->query('INSERT INTO thread SET title = ?, created = NOW()', array($this->title));
         $this->id = $db->lastInsertId();
-        $this->write($comment);          
+        $this->write($comment);
         $db->commit();
-    }    
+    }
     
     public static function countAll()
     {
@@ -88,7 +90,7 @@ class Thread extends AppModel
     public static function countComments($thread_id)
     {
         $db = DB::conn();
-        return (int) $db->value("SELECT COUNT(*) FROM comment WHERE thread_id = ?",array($thread_id));
-    }       
+        return (int) $db->value("SELECT COUNT(*) FROM comment
+                            WHERE thread_id = ?",array($thread_id));
+    }
 }
-

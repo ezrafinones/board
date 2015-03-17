@@ -3,21 +3,21 @@ class UserController extends AppController
 {
     public function register()
     {
-        $userinfo = new UserInfo;
+        $register_info = new RegisterInfo;
         $user = new User;
-        $page = Param::get('page_next','register');
+        $page = Param::get('page_next', 'register');
         $error = false;
 
         switch ($page) {
             case 'register':
                 break;
             case 'write_end':
-                $userinfo->firstname = Param::get('firstname');
-                $userinfo->lastname = Param::get('lastname');
-                $userinfo->email = Param::get('email');
-                $userinfo->username = Param::get('username');
-                $userinfo->password = Param::get('password');
-                $userinfo->validate_password = Param::get('validate_password');
+                $register_info->firstname = Param::get('firstname');
+                $register_info->lastname = Param::get('lastname');
+                $register_info->email = Param::get('email');
+                $register_info->username = Param::get('username');
+                $register_info->password = Param::get('password');
+                $register_info->validate_password = Param::get('validate_password');
 
                 $user->firstname = Param::get('firstname');
                 $user->lastname = Param::get('lastname');
@@ -25,30 +25,30 @@ class UserController extends AppController
                 $user->username = Param::get('username');
                 $user->password = Param::get('password');
 
-                if (!$this->matchPassword()) {
-                    $userinfo->validation_errors['password']['match'] = true;
+                if (!$this->isMatchPassword()) {
+                    $register_info->validation_errors['password']['match'] = true;
                 }
 
                 try {
-                    $user->register($userinfo);
-                }
-                catch (ValidationException $e) {
+                    $user->register($register_info);
+                } catch (ValidationException $e) {
                     $page = 'register';
                     $error = true;
                 }
                 break;
             default:
-                throw new NotFoundException("{$page} is not found");    
+                throw new NotFoundException("{$page} is not found");
                 break;
         }
-        $this->set(get_defined_vars()); 
+        $this->set(get_defined_vars());
         $this->render($page);
     }
 
     public function login()
     {
+        $login_info = new LoginInfo;
         $user = new User;
-        $page = Param::get('page_next','login');
+        $page = Param::get('page_next', 'login');
         $error = false;
 
         if (isset($_SESSION['username'])) {
@@ -59,28 +59,30 @@ class UserController extends AppController
             case 'login':
                 break;
             case 'write_end':
+                $login_info->username = Param::get('username');
+                $login_info->password = Param::get('password');
+
                 $user->username = Param::get('username');
                 $user->password = Param::get('password');
                 
                 try {
-                    $user->login();
-                }
-                catch (ValidationException $e) {
+                    $user->login($login_info);
+                } catch (ValidationException $e) {
                     $page = 'login';
                     $error = true;
                 }
-                if(!$error){
+                if (!$error) {
                     redirect('/user/profile');
                 }
                 break;
             default:
-                throw new NotFoundException("{$page} is not found");    
+                throw new NotFoundException("{$page} is not found");
                 break;
         }
         $this->set(get_defined_vars()); 
     }
 
-    public function matchPassword()
+    public function isMatchPassword()
     {
         $isMatch = Param::get('password') == Param::get('validate_password');
         if ($isMatch) {
@@ -90,7 +92,7 @@ class UserController extends AppController
 
     public function profile()
     {
-        if (!isset($_SESSION['username'])){
+        if (!isset($_SESSION['username'])) {
             redirect('/');
         }
         $this->set(get_defined_vars());
@@ -102,4 +104,3 @@ class UserController extends AppController
         redirect('/');
     }
 }
-
