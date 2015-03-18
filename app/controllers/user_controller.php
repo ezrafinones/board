@@ -79,7 +79,7 @@ class UserController extends AppController
                 throw new NotFoundException("{$page} is not found");
                 break;
         }
-        $this->set(get_defined_vars()); 
+        $this->set(get_defined_vars());
     }
 
     public function isMatchPassword()

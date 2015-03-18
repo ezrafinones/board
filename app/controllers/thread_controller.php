@@ -10,11 +10,10 @@ class ThreadController extends AppController
 
         $threads = Thread::getAll($pagination->start_index - 1, $pagination->count + 1);
         $pagination->checkLastPage($threads);
-
         $total = Thread::countAll();
         $pages = ceil($total / $per_page);
+        
         $this->set(get_defined_vars());
-
         if (!isset($_SESSION['username'])) {
             redirect('/');
         }
@@ -28,7 +27,7 @@ class ThreadController extends AppController
         $per_page = self::MAX_PAGE_SIZE;
         $page = Param::get('page', 1);
         $pagination = new SimplePagination($page, $per_page);
-        $threads = $thread->getComments($pagination->start_index - 1, $pagination->count + 1,$thread_id);
+        $threads = $thread->getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($threads);
         $total = Thread::countComments($thread_id);
         $pages = ceil($total / $per_page);
@@ -77,7 +76,7 @@ class ThreadController extends AppController
             try {
                 $thread->create($comment);
             } catch (ValidationException $e) {
-               $page = 'create';
+                $page = 'create';
             }
             break;
         default:

@@ -1,10 +1,10 @@
 <?php
 class User extends AppModel
-{  
+{
     public function register(RegisterInfo $register_info)
     {
         $register_info->validate();
-        if($register_info->hasError()){
+        if ($register_info->hasError()) {
             throw new ValidationException('invalid input');
         }
 

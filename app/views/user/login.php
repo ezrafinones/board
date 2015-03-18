@@ -2,7 +2,7 @@
  
 <?php if ($error): ?>
     <div class="alert alert-block">                
-        <h4 class="alert-heading">Not a registered user</h4>
+        <h4 class="alert-heading">Username and Password Authentication Error</h4>
     </div>
 <?php endif ?>
 
@@ -30,17 +30,21 @@
 
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
     <div class="input-prepend">
-        <span class="add-on"><span class="icon-user"></span></span>
-        <input type="text" class="span2" name="username" placeholder="username" value="<?php check_string(Param::get('username')) ?>">
+        <div class="col-xs-6">
+            <span class="add-on"><span class="icon-user"></span></span>
+            <input type="text" class="form-control input-lg" name="username" placeholder="username" value="<?php check_string(Param::get('username')) ?>">
+        </div>   
     </div>
     <div class="input-prepend">
-        <span class="add-on"><span class="icon-briefcase"></span></span>
-        <input type="password" class="span2" name="password" placeholder="password" value="<?php check_string(Param::get('password')) ?>">
+        <div class="col-xs-6">
+            <span class="add-on"><span class="icon-briefcase"></span></span>
+            <input type="password" class="form-control input-lg" name="password" placeholder="password" value="<?php check_string(Param::get('password')) ?>">
+        </div>
     </div>
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
     <input type="hidden" name="page_next" value="user_profile">
     <button type="submit" class="btn btn-inverse">Login</button>   
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
     <input type="hidden" name="page_next" value="write_end">
-    <a href="/user/register" class="btn">Sign Up</a>              
+    <a href="/user/register" class="btn">Sign Up</a>             
 </form>     

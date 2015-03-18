@@ -1,5 +1,4 @@
 <?php
-
 function check_string($string)
 {
     if (!isset($string)) return;

@@ -91,6 +91,6 @@ class Thread extends AppModel
     {
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM comment
-                            WHERE thread_id = ?",array($thread_id));
+                            WHERE thread_id = ?", array($thread_id));
     }
 }

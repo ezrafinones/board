@@ -9,22 +9,22 @@
     </div>
 <?php endforeach ?>
 
-<ul class="pager">    
-<?php if($pagination->current > 1): ?>
+<ul class="pager">
+<?php if ($pagination->current > 1): ?>
     <li><a href='?thread_id=<?php echo $thread_id ?>&page=<?php echo $pagination->prev ?>'>Previous</a></li>
 <?php else: ?>
     Previous
 <?php endif ?>
 
-<?php for($i = 1; $i <= $pages; $i++): ?>
-    <?php if($i == $page): ?>
+<?php for ($i = 1; $i <= $pages; $i++): ?>
+    <?php if ($i == $page): ?>
         <?php echo $i ?>
     <?php else: ?>
         <a href='?thread_id=<?php echo $thread_id ?>&page=<?php echo $i ?>'><?php echo $i ?></a>
     <?php endif; ?>
 <?php endfor; ?>
 
-<?php if(!$pagination->is_last_page): ?>
+<?php if (!$pagination->is_last_page): ?>
     <li><a href='?thread_id=<?php echo $thread_id ?>&page=<?php echo $pagination->next ?>'>Next</a></li>
 <?php else: ?>
     Next
