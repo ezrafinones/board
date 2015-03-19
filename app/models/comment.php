@@ -7,11 +7,6 @@ class Comment extends AppModel
     const MAX_BODY_LENGTH = 254;
 
     public $validation = array(
-        'username' => array(
-            'length' => array(
-                'validate_between', self::MIN_LENGTH, self::MAX_USERNAME_LENGTH,
-            ),
-        ),
         'body' => array(
             'length' => array(
                 'validate_between', self::MIN_LENGTH, self::MAX_BODY_LENGTH,

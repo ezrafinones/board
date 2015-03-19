@@ -29,8 +29,7 @@
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
     <label>Title</label>
         <input type="text" class="span2" name="title" value="<?php check_string(Param::get('title')) ?>">
-    <label>Your name</label>
-        <input type="text" class="span2" name="username" value="<?php check_string(Param::get('username')) ?>">
+        <input type="hidden" class="span2" name="$_SESSION['username']" value="<?php check_string(Param::get('username')) ?>">
     <label>Comment</label>
     <textarea name="body"><?php check_string(Param::get('body')) ?></textarea>
     <br />

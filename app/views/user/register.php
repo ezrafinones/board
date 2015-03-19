@@ -70,4 +70,3 @@
     <input type="hidden" name="page_next" value="write_end">
     <button type="submit" class="btn btn-inverse">Register</button>
 </form> 
-

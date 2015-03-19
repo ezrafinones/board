@@ -17,7 +17,8 @@ class User extends AppModel
                         'password'=> md5($this->password),
         );
 
-        $row = $db->row('SELECT * FROM user WHERE username = ?', array($this->username));
+        $row = $db->row('SELECT * FROM user 
+                    WHERE username = ?', array($this->username));
         if (!$row) {
             $db->insert('user', $params);
             $db->commit();
@@ -36,7 +37,7 @@ class User extends AppModel
         $db->begin();
         $params = array($this->username, md5($this->password));
         $row = $db->row('SELECT * FROM user 
-            WHERE username = ? AND password = ?', $params);
+                    WHERE username = ? AND password = ?', $params);
 
         if (!$row) {
             throw new RecordNotFoundException('No Record Found');
