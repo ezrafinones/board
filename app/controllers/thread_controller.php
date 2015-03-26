@@ -1,11 +1,10 @@
 <?php
 class ThreadController extends AppController
 {
-    const MAX_PAGE_SIZE = 5;
     public function index()
     {
         $page = Param::get('page', 1);
-        $per_page = self::MAX_PAGE_SIZE;
+        $per_page = Thread::MAX_PAGE_SIZE;
         $pagination = new SimplePagination($page, $per_page);
 
         $threads = Thread::getAll($pagination->start_index - 1, $pagination->count + 1);
@@ -24,7 +23,7 @@ class ThreadController extends AppController
         $thread = Thread::get(Param::get('thread_id'));
         $thread_id = Param::get('thread_id');
 
-        $per_page = self::MAX_PAGE_SIZE;
+        $per_page = Thread::MAX_PAGE_SIZE;
         $page = Param::get('page', 1);
         $pagination = new SimplePagination($page, $per_page);
         $threads = $thread->getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);

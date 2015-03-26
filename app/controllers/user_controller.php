@@ -3,8 +3,6 @@ class UserController extends AppController
 {
     public function register()
     {
-        $register_info = new RegisterInfo;
-        $user = new User;
         $page = Param::get('page_next', 'register');
         $error = false;
 
@@ -12,29 +10,25 @@ class UserController extends AppController
             case 'register':
                 break;
             case 'write_end':
-                $register_info->firstname = Param::get('firstname');
-                $register_info->lastname = Param::get('lastname');
-                $register_info->email = Param::get('email');
-                $register_info->username = Param::get('username');
-                $register_info->password = Param::get('password');
-                $register_info->validate_password = Param::get('validate_password');
-
-                $user->firstname = Param::get('firstname');
-                $user->lastname = Param::get('lastname');
-                $user->email = Param::get('email');
-                $user->username = Param::get('username');
-                $user->password = Param::get('password');
+                $params = array(
+                    'firstname' => Param::get('firstname'),
+                    'lastname' => Param::get('lastname'),
+                    'email' => Param::get('email'),
+                    'username' => Param::get('username'),
+                    'password' => Param::get('password'),
+                    'validate_password' => Param::get('validate_password')
+                );
+                $user = new User($params);
 
                 if (!$this->isMatchPassword()) {
-                    $register_info->validation_errors['password']['match'] = true;
+                    $user->validation_errors['password']['match'] = true;
                 }
 
                 try {
-                    $user->register($register_info);
+                    $user->register();  
                 } catch (ValidationException $e) {
                     $page = 'register';
-                    $error = true;
-                }
+                }    
                 break;
             default:
                 throw new NotFoundException("{$page} is not found");
@@ -93,7 +87,7 @@ class UserController extends AppController
     public function profile()
     {
         if (!isset($_SESSION['username'])) {
-            redirect('/');
+            redirect('/user/login');
         }
         $this->set(get_defined_vars());
     }
@@ -101,6 +95,6 @@ class UserController extends AppController
     public function logout()
     {
         session_destroy();
-        redirect('/');
+        redirect('/user/login');
     }
 }

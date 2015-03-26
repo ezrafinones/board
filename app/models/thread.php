@@ -4,6 +4,8 @@ class Thread extends AppModel
     const MIN_TITLE_LENGTH = 1;
     const MAX_TITLE_LENGTH = 30;
 
+    const MAX_PAGE_SIZE = 5;
+
     public $validation = array(
        'title' => array(
             'length' => array(
