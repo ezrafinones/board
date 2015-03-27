@@ -1,12 +1,15 @@
 <?php
-class Session extends AppModel
+class Session 
 {
-    public static function setSession($session_name, $value)
+    public static function set($key, $value)
     {
-        $_SESSION["$session_name"] = $value;
+        $_SESSION[$key] = $value;
     }
-    public static function getSession($session_name)
+    public static function get($key)
     {
-        return $_SESSION["$session_name"];
+        if (isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+        return false;
     }
 }

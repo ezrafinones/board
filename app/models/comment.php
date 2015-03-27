@@ -13,4 +13,24 @@ class Comment extends AppModel
             ),
         ),
     );
+
+    public static function getComments($offset, $limit, $id)
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment 
+                        WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
+       
+        foreach ($rows as $row) {
+           $comments[] = new Comment($row);
+        }
+        return $comments;
+    }
+
+    public static function countComments($thread_id)
+    {
+        $db = DB::conn();
+        return (int) $db->value("SELECT COUNT(*) FROM comment
+                            WHERE thread_id = ?", array($thread_id));
+    }
 }

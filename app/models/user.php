@@ -81,6 +81,6 @@ class User extends AppModel
         if (!$row) {
             throw new RecordNotFoundException('No Record Found');
         }
-        Session::setSession('username', $this->username);
+        Session::set('username', $this->username);
     }
 }

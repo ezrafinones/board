@@ -3,7 +3,7 @@
     <li><a href="/thread/index">Threads</a></li>
 
     <div class="btn-group pull-right">
-        <a class="btn btn-primary" href="#"><i class="icon-user icon-white"></i><?php echo " ".$_SESSION['username']?></a>
+        <a class="btn btn-primary" href="#"><i class="icon-user icon-white"></i><?php echo " ".Session::get('username')?></a>
         <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
             <li><a href="/user/logout">Log Out</a></li>
@@ -29,7 +29,7 @@
 
 <ul class="pager">
     <?php if ($pagination->current > 1): ?>
-        <li><a href='?thread_id=<?php echo $thread_id ?>&page=<?php echo $pagination->prev ?>'>Previous</a></li>
+        <li><a href='<?php echo url('thread/view', array('thread_id' => $thread_id, 'page' => $pagination->prev)); ?>'>Previous</a></li>
     <?php else: ?>
         Previous
     <?php endif ?>
@@ -43,7 +43,7 @@
     <?php endfor; ?>
 
     <?php if (!$pagination->is_last_page): ?>
-        <li><a href='?thread_id=<?php echo $thread_id ?>&page=<?php echo $pagination->next ?>'>Next</a></li>
+        <li><a href='<?php echo url('thread/view', array('thread_id' => $thread_id, 'page' => $pagination->next)); ?>'>Next</a></li>
     <?php else: ?>
         Next
     <?php endif ?>
@@ -51,7 +51,7 @@
 
 <hr>
 <form class="well" method="post" action="<?php check_string(url('thread/write')) ?>">
-    <input type="hidden" class="span2" name="<?php $_SESSION['username']?>" value="<?php check_string(Param::get('username')) ?>">
+    <input type="hidden" class="span2" name="<?php Session::get('username')?>" value="<?php check_string(Param::get('username')) ?>">
     <label>Comment</label>
     <textarea name="body"><?php check_string(Param::get('body')) ?></textarea>
     <br />

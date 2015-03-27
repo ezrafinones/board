@@ -4,7 +4,6 @@ class UserController extends AppController
     public function register()
     {
         $page = Param::get('page_next', 'register');
-        $error = false;
 
         switch ($page) {
             case 'register':
@@ -40,25 +39,24 @@ class UserController extends AppController
 
     public function login()
     {
-        $login_info = new LoginInfo;
-        $user = new User;
         $page = Param::get('page_next', 'login');
         $error = false;
 
         if (isset($_SESSION['username'])) {
-            redirect('/user/profile');
+            redirect(url('user/profile'));
         }
 
         switch ($page) {
             case 'login':
                 break;
             case 'write_end':
-                $login_info->username = Param::get('username');
-                $login_info->password = Param::get('password');
+                $params = array(
+                    'username' => Param::get('username'),
+                    'password' => Param::get('password')
+                );
+                $user = new User($params);
+                $login_info = new LoginInfo($params);
 
-                $user->username = Param::get('username');
-                $user->password = Param::get('password');
-                
                 try {
                     $user->login($login_info);
                 } catch (ValidationException $e) {
@@ -66,7 +64,7 @@ class UserController extends AppController
                     $error = true;
                 }
                 if (!$error) {
-                    redirect('/user/profile');
+                    redirect(url('user/profile'));
                 }
                 break;
             default:
@@ -78,16 +76,13 @@ class UserController extends AppController
 
     public function isMatchPassword()
     {
-        $isMatch = Param::get('password') == Param::get('validate_password');
-        if ($isMatch) {
-            return true;
-        }
+        return $isMatch = Param::get('password') == Param::get('validate_password');
     }
 
     public function profile()
     {
-        if (!isset($_SESSION['username'])) {
-            redirect('/user/login');
+        if (!$_SESSION['username']) {
+            redirect(url('user/login'));
         }
         $this->set(get_defined_vars());
     }
@@ -95,6 +90,6 @@ class UserController extends AppController
     public function logout()
     {
         session_destroy();
-        redirect('/user/login');
+        redirect(url('user/login'));
     }
 }

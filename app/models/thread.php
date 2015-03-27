@@ -20,7 +20,7 @@ class Thread extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $threads[] = new self($row);
         }
         return $threads;
@@ -37,19 +37,6 @@ class Thread extends AppModel
         return new self($row);
     }
 
-    public static function getComments($offset, $limit, $id)
-    {
-        $comments = array();
-        $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM comment 
-                        WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
-       
-        foreach ($rows as $row) {
-           $comments[] = new Comment($row);
-        }        
-        return $comments;
-    }
-
     public function write(Comment $comment)
     {
         if (!$comment->validate()) {
@@ -58,8 +45,8 @@ class Thread extends AppModel
 
         $db = DB::conn();
         $db->query('INSERT INTO comment 
-                SET thread_id = ?, username = ?, body = ?, created = NOW()',
-                array($this->id, $_SESSION['username'], $comment->body));
+                SET thread_id = ?, username = ?, body = ?',
+                array($this->id, Session::get('username'), $comment->body));
     }
 
     public function create(Comment $comment)
@@ -82,17 +69,10 @@ class Thread extends AppModel
         $this->write($comment);
         $db->commit();
     }
-    
+
     public static function countAll()
     {
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM thread");
-    }
-
-    public static function countComments($thread_id)
-    {
-        $db = DB::conn();
-        return (int) $db->value("SELECT COUNT(*) FROM comment
-                            WHERE thread_id = ?", array($thread_id));
     }
 }

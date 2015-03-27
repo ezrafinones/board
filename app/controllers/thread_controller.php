@@ -11,10 +11,10 @@ class ThreadController extends AppController
         $pagination->checkLastPage($threads);
         $total = Thread::countAll();
         $pages = ceil($total / $per_page);
-        
+
         $this->set(get_defined_vars());
-        if (!isset($_SESSION['username'])) {
-            redirect('/');
+        if (!Session::get('username')) {
+            redirect(url('user/login'));
         }
     }
 
@@ -26,9 +26,9 @@ class ThreadController extends AppController
         $per_page = Thread::MAX_PAGE_SIZE;
         $page = Param::get('page', 1);
         $pagination = new SimplePagination($page, $per_page);
-        $threads = $thread->getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
+        $threads = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($threads);
-        $total = Thread::countComments($thread_id);
+        $total = Comment::countComments($thread_id);
         $pages = ceil($total / $per_page);
         
         $this->set(get_defined_vars());
@@ -40,19 +40,19 @@ class ThreadController extends AppController
         $page = Param::get('page_next');
             
         switch ($page) {
-        case 'write':
-            break;
-        case 'write_end':
-            $comment->body = Param::get('body');
-            try{
-                $thread->write($comment);
-            } catch(ValidationException $e) {
-                $page = 'write';
-            }
-            break;
-        default:
-            throw new NotFoundException("{$page} is not found");
-            break;
+            case 'write':
+                break;
+            case 'write_end':
+                $comment->body = Param::get('body');
+                try{
+                    $thread->write($comment);
+                } catch(ValidationException $e) {
+                    $page = 'write';
+                }
+                break;
+            default:
+                throw new NotFoundException("{$page} is not found");
+                break;
         }
         $this->set(get_defined_vars());
         $this->render($page);
@@ -65,21 +65,21 @@ class ThreadController extends AppController
         $page = Param::get('page_next', 'create');
 
         switch ($page) {
-        case 'create':
-            break;
-        case 'create_end':
-            $thread->title = Param::get('title');
-            $comment->username = Param::get('username');
-            $comment->body = Param::get('body');
-            try {
-                $thread->create($comment);
-            } catch (ValidationException $e) {
-                $page = 'create';
-            }
-            break;
-        default:
-            throw new NotFoundException("{$page} is not found");
-            break;
+            case 'create':
+                break;
+            case 'create_end':
+                $thread->title = Param::get('title');
+                $comment->username = Param::get('username');
+                $comment->body = Param::get('body');
+                try {
+                    $thread->create($comment);
+                } catch (ValidationException $e) {
+                    $page = 'create';
+                }
+                break;
+            default:
+                throw new NotFoundException("{$page} is not found");
+                break;
         }
         $this->set(get_defined_vars());
         $this->render($page);
