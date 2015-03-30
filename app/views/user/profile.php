@@ -9,7 +9,18 @@
     <?php endforeach ?>
 </div>
 
+<h4>User Details</h4>
+<ul style='list-style:none;'>
+    <?php foreach ($user as $v): ?>
+        <li><b><?php echo "First name: "?></b><i><?php check_string($v->firstname) ?></i></li>
+        <li><b><?php echo "Last name: "?></b><i><?php check_string($v->lastname) ?></i></li>
+        <li><b><?php echo "Email Address: "?></b><i><?php check_string($v->email) ?></i></li>
+        <li><b><?php echo "Username: "?></b><i><?php check_string($v->username) ?></i></li>
+    <?php endforeach ?>
+</ul>
+
 <h3>Your Threads</h3>
+
 <?php foreach ($comments as $k => $v): ?>
     <div class="comment">  
         <div class="meta" style="font-size:16px">
