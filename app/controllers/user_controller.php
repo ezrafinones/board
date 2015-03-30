@@ -81,10 +81,12 @@ class UserController extends AppController
 
     public function profile()
     {
-        $user = User::getAll();
         if (!$_SESSION['username']) {
             redirect(url('user/login'));
         }
+
+        $user = User::getAll();
+        $comments = User::getComments();
         $this->set(get_defined_vars());
     }
 

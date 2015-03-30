@@ -158,4 +158,17 @@ class User extends AppModel
                 throw new ValidationException('Password Mismatch');
         } 
     }
+
+    public static function getComments()
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment 
+                        WHERE username = ?", array($_SESSION['username']));
+
+        foreach($rows as $row) {
+            $comments[] = new self($row);
+        }
+        return $comments;
+    }
 }
