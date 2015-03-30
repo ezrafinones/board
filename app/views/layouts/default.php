@@ -16,6 +16,16 @@
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand " href="/">DietCake</a>
+                    <?php if (isset($_SESSION['username'])): ?>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-primary" href="/user/profile"><i class="icon-user icon-white"></i><?php echo " ".$_SESSION['username']?></a>
+                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a href="/user/settings"><i class="icon-wrench"></i> Account Settings</a></li>
+                            <li><a href="/user/logout"><i class="icon-off"></i> Log Out</a></li>
+                         </ul>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
         </div>

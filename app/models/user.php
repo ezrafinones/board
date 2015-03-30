@@ -82,5 +82,53 @@ class User extends AppModel
             throw new RecordNotFoundException('No Record Found');
         }
         Session::set('username', $this->username);
+        Session::set('id', $row['id']);
+    }
+
+    public static function getAll()
+    {
+        $user = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM user 
+                        WHERE id = ?", array($_SESSION['id']));
+
+        foreach($rows as $row) {
+            $user[] = new self($row);
+        }
+        return $user;
+    }
+
+    public function getId()
+    {
+        $db = DB::conn();
+        $id = $db->row("SELECT id FROM user 
+                    WHERE id = ?", array($_SESSION['id']));
+        $this->id = $id['id'];
+    }
+
+    public function updateProfile()
+    {
+        $params = array();
+        $temp = array('firstname' => $this->firstname,
+                        'lastname' => $this->lastname,
+                        'email' => $this->email,
+        );   
+
+        foreach ($temp as $k => $v) {
+            if (!empty($v)) {
+                $params[$k] = $v;
+            }
+        }
+        if (!empty($params)) {
+            try {
+                $db = DB::conn();
+                $db->begin();
+                $db->update('user', $params, array('id' => $this->id));
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollback();
+                throw $e;
+            }
+        }  
     }
 }

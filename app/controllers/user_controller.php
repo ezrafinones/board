@@ -81,6 +81,7 @@ class UserController extends AppController
 
     public function profile()
     {
+        $user = User::getAll();
         if (!$_SESSION['username']) {
             redirect(url('user/login'));
         }
@@ -91,5 +92,38 @@ class UserController extends AppController
     {
         session_destroy();
         redirect(url('user/login'));
+    }
+
+    public function settings()
+    {
+        $users = new User;
+        $page = Param::get('page_next', 'settings');
+        $user = User::getAll();
+        $error = false;
+
+        switch ($page) {
+            case 'settings':
+                break;
+            case 'write_success':
+                $users->firstname = Param::get('firstname');
+                $users->lastname = Param::get('lastname');
+                $users->email = Param::get('email');
+                $users->getId();
+
+                try {
+                    $users->updateProfile();
+
+                } catch (ValidationException $e) {
+                        $page = 'settings';
+                        $error = true;
+                }
+                break;
+            default:
+                throw new NotFoundException("{$page} is not found");
+                break;
+        }
+
+        $this->set(get_defined_vars());
+        $this->render($page);
     }
 }
