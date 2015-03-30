@@ -21,6 +21,7 @@ PRIMARY KEY (id)
 CREATE TABLE IF NOT EXISTS comment (
 id                      INT UNSIGNED NOT NULL AUTO_INCREMENT,
 thread_id               INT UNSIGNED NOT NULL,
+user_id                 INT UNSIGNED NOT NULL,
 username                VARCHAR(255) NOT NULL,
 body                    TEXT NOT NULL,
 created                 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -37,4 +38,3 @@ username                VARCHAR(20) NOT NULL,
 password                VARCHAR(20) NOT NULL,
 PRIMARY KEY (id)   
 )ENGINE=InnoDB;
-

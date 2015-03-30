@@ -1,14 +1,6 @@
 <ul class="nav nav-pills">
     <li><a href="/user/profile">Profile</a></li>
     <li class="active"><a href="#">Threads</a></li>
-    
-    <div class="btn-group pull-right">
-        <a class="btn btn-primary" href="#"><i class="icon-user icon-white"></i><?php echo " ".$_SESSION['username']?></a>
-        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li><a href="/user/logout">Log Out</a></li>
-        </ul>
-    </div>
 </ul>
 
 <h1>All threads</h1>

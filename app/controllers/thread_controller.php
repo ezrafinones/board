@@ -30,7 +30,7 @@ class ThreadController extends AppController
         $pagination->checkLastPage($threads);
         $total = Comment::countComments($thread_id);
         $pages = ceil($total / $per_page);
-        
+
         $this->set(get_defined_vars());
     }   
     public function write()

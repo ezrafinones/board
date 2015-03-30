@@ -90,7 +90,7 @@ class User extends AppModel
         $user = array();
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM user 
-                        WHERE id = ?", array($_SESSION['id']));
+                        WHERE id = ?", array(Session::get('id')));
 
         foreach($rows as $row) {
             $user[] = new self($row);
@@ -98,11 +98,24 @@ class User extends AppModel
         return $user;
     }
 
+    public static function getComments()
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment 
+                        WHERE username = ?", array($_SESSION['username']));
+
+        foreach($rows as $row) {
+            $comments[] = new self($row);
+        }
+        return $comments;
+    }
+
     public function getId()
     {
         $db = DB::conn();
         $id = $db->row("SELECT id FROM user 
-                    WHERE id = ?", array($_SESSION['id']));
+                    WHERE id = ?", array(Session::get('id')));
         $this->id = $id['id'];
     }
 
@@ -140,7 +153,7 @@ class User extends AppModel
             );
             $db = DB::conn();
             $row = $db->row('SELECT password FROM user 
-                        WHERE id = ?', array($_SESSION['id']));
+                        WHERE id = ?', array(Session::get('id')));
             
             if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {               
                  try {
@@ -159,12 +172,25 @@ class User extends AppModel
         } 
     }
 
-    public static function getComments()
+    public static function getUserInfo($user_id)
+    {
+        $user = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM user 
+                        WHERE id = ?", array($user_id));
+
+        foreach($rows as $row) {
+            $user[] = new self($row);
+        }
+        return $user;
+    }
+
+    public static function getUserComments($user_id)
     {
         $comments = array();
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment 
-                        WHERE username = ?", array($_SESSION['username']));
+                        WHERE user_id = ?", array($user_id));
 
         foreach($rows as $row) {
             $comments[] = new self($row);

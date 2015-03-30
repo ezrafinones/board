@@ -1,22 +1,14 @@
 <ul class="nav nav-pills">
     <li><a href="/user/profile">Profile</a></li>
     <li><a href="/thread/index">Threads</a></li>
-
-    <div class="btn-group pull-right">
-        <a class="btn btn-primary" href="#"><i class="icon-user icon-white"></i><?php echo " ".Session::get('username')?></a>
-        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li><a href="/user/logout">Log Out</a></li>
-        </ul>
-    </div>
 </ul>
 
 <h1><?php check_string($thread->title) ?></h1>
 
 <?php foreach ($threads as $k => $v): ?>
-    <div class="comment">  
+    <div class="comment">
         <div class="meta" style="font-size:16px">
-            <b><?php check_string($v->username) ?></b> 
+            <a href="/user/user_profile?user_id=<?php echo $v->user_id ?>"><b><?php check_string($v->username) ?></b></a>
         </div>
         <div class="meta" style="font-size:12px; color:#5C5C5C">
             <i><?php check_string($v->created) ?></i>

@@ -81,7 +81,7 @@ class UserController extends AppController
 
     public function profile()
     {
-        if (!$_SESSION['username']) {
+        if (!Session::get('username')) {
             redirect(url('user/login'));
         }
 
@@ -134,5 +134,17 @@ class UserController extends AppController
 
         $this->set(get_defined_vars());
         $this->render($page);
+    }
+
+    public function user_profile()
+    {     
+        if (!Session::get('username')) {
+            redirect(url('user/login'));
+        }
+        $user_id = Param::get('user_id');
+        $user = User::getUserInfo($user_id);
+        $comments = User::getUserComments($user_id);  
+        
+        $this->set(get_defined_vars());
     }
 }
