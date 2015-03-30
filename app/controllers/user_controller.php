@@ -105,13 +105,20 @@ class UserController extends AppController
             case 'settings':
                 break;
             case 'write_success':
-                $users->firstname = Param::get('firstname');
-                $users->lastname = Param::get('lastname');
-                $users->email = Param::get('email');
+                $params = array(
+                    'firstname' => Param::get('firstname'),
+                    'lastname' => Param::get('lastname'),
+                    'email' => Param::get('email'),
+                    'password' => Param::get('password'),
+                    'newpassword' => Param::get('newpassword'),
+                    'cnewpassword' => Param::get('cnewpassword')
+                );
+                $users = new User($params);
                 $users->getId();
 
                 try {
                     $users->updateProfile();
+                    $users->updatePassword();
 
                 } catch (ValidationException $e) {
                         $page = 'settings';

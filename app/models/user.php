@@ -131,4 +131,31 @@ class User extends AppModel
             }
         }  
     }
+
+    public function updatePassword()
+    {
+        if (!empty($this->newpassword) && !empty($this->cnewpassword)) {
+            $params = array('password' => md5($this->newpassword),
+                        'validate_password' => md5($this->cnewpassword),
+            );
+            $db = DB::conn();
+            $row = $db->row('SELECT password FROM user 
+                        WHERE id = ?', array($_SESSION['id']));
+            
+            if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {               
+                 try {
+                    $db->begin();
+                    $db->update('user', $params, array('id' => $this->id));
+                    $db->commit();
+                } catch(Exception $e) {
+                    $db->rollback();
+                    throw $e;
+                }
+            } else {
+                throw new ValidationException('Password Mismatch');
+            }
+        } else {
+                throw new ValidationException('Password Mismatch');
+        } 
+    }
 }
