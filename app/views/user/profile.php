@@ -9,6 +9,22 @@
     <?php endforeach ?>
 </div>
 
+<img src=<?php echo $image?> alt="avatar" style="width:150px; height:150px; margin-bottom:5px">
+
+<?php if ($error) : ?>
+    <div class="alert alert-block">
+        <h5 class="alert-heading">Sorry, your file was not uploaded. There was an error in uploading your image.</h5>
+    </div>
+<?php endif ?>
+
+<form action="<?php check_string(url('')) ?>" method="post" enctype="multipart/form-data">
+    <label class="btn btn-inverse" style="padding:4px 50px; margin-bottom:5px">Browse   
+        <input type="file" name="image" id="image" style="display:none;">
+    </label>
+    <br>
+    <input style="padding:2px 28px" type="submit" value="Upload Image" name="submit">
+</form>
+
 <h4>User Details</h4>
 <ul style='list-style:none;'>
     <?php foreach ($user as $v): ?>

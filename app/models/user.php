@@ -45,8 +45,7 @@ class User extends AppModel
     {
         $this->validate();
         $db = DB::conn();
-        $row = $db->row('SELECT * FROM user 
-                    WHERE username = ?', array($this->username));
+        $row = $db->row('SELECT * FROM user WHERE username = ?', array($this->username));
         if ($row) {
             $this->validation_errors['user']['exist'] = true;
         }
@@ -89,8 +88,7 @@ class User extends AppModel
     {
         $user = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM user 
-                        WHERE id = ?", array(Session::get('id')));
+        $rows = $db->rows("SELECT * FROM user WHERE id = ?", array(Session::get('id')));
 
         foreach($rows as $row) {
             $user[] = new self($row);
@@ -103,7 +101,7 @@ class User extends AppModel
         $comments = array();
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment 
-                        WHERE username = ?", array($_SESSION['username']));
+                    WHERE username = ?", array(Session::get('username')));
 
         foreach($rows as $row) {
             $comments[] = new self($row);
@@ -114,8 +112,7 @@ class User extends AppModel
     public function getId()
     {
         $db = DB::conn();
-        $id = $db->row("SELECT id FROM user 
-                    WHERE id = ?", array(Session::get('id')));
+        $id = $db->row("SELECT id FROM user WHERE id = ?", array(Session::get('id')));
         $this->id = $id['id'];
     }
 
@@ -123,8 +120,8 @@ class User extends AppModel
     {
         $params = array();
         $temp = array('firstname' => $this->firstname,
-                        'lastname' => $this->lastname,
-                        'email' => $this->email,
+                    'lastname' => $this->lastname,
+                    'email' => $this->email,
         );   
 
         foreach ($temp as $k => $v) {
@@ -155,7 +152,7 @@ class User extends AppModel
             $row = $db->row('SELECT password FROM user 
                         WHERE id = ?', array(Session::get('id')));
             
-            if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {               
+            if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {
                  try {
                     $db->begin();
                     $db->update('user', $params, array('id' => $this->id));
@@ -176,8 +173,7 @@ class User extends AppModel
     {
         $user = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM user 
-                        WHERE id = ?", array($user_id));
+        $rows = $db->rows("SELECT * FROM user WHERE id = ?", array($user_id));
 
         foreach($rows as $row) {
             $user[] = new self($row);
@@ -189,12 +185,44 @@ class User extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM comment 
-                        WHERE user_id = ?", array($user_id));
+        $rows = $db->rows("SELECT * FROM comment WHERE user_id = ?", array($user_id));
 
         foreach($rows as $row) {
             $comments[] = new self($row);
         }
         return $comments;
+    }
+
+    public static function getImage()
+    {
+        $db = DB::conn();
+        $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
+        return $image['image'];
+    } 
+
+    public function createImage($default_image)
+    {
+        $db = DB::conn();
+        try {
+            $db->begin();
+            $db->update('user', array('image' => $default_image), array('id' => Session::get('id')));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+    }
+
+    public function uploadImage($target_file)
+    {
+        $db = DB::conn();
+        try {
+            $db->begin();
+            $db->update('user', array('image' => $target_file), array('id' => Session::get('id')));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
     }
 }

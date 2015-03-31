@@ -4,6 +4,7 @@ class UserController extends AppController
     public function register()
     {
         $page = Param::get('page_next', 'register');
+        $default_image = "/image/avatar.png";
 
         switch ($page) {
             case 'register':
@@ -24,6 +25,7 @@ class UserController extends AppController
                 }
 
                 try {
+                    $user->createImage($default_image);
                     $user->register();  
                 } catch (ValidationException $e) {
                     $page = 'register';
@@ -87,6 +89,43 @@ class UserController extends AppController
 
         $user = User::getAll();
         $comments = User::getComments();
+        $users = new User;
+        $image = User::getImage(); 
+        $error = false;
+
+        if (isset($_FILES["image"])) {
+            $target_dir = "image/";
+            $target_file = $image;
+            $image_file_type = pathinfo($target_file,PATHINFO_EXTENSION);
+            $target_file = $target_dir . $_SESSION['username'].".{$image_file_type}";
+            $is_uploaded = 1;
+
+            if (isset($_POST["submit"])) {
+                if (getimagesize($_FILES["image"]["tmp_name"]) !== false) {
+                    $is_uploaded = 1;
+                } else {
+                    $is_uploaded = 0;
+                    $error = true;
+                }
+            }
+
+            if ($_FILES["image"]["size"] > 500000 && $image_file_type != "jpg" && $image_file_type != "png" 
+            && $image_file_type != "jpeg" && $image_file_type != "gif") {
+                $is_uploaded = 0;
+                $error = true;
+            }
+
+            if ($is_uploaded == 0) {
+                $error = true;
+                } else { 
+                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        $target_file = "/" . $target_file;
+                        $users->uploadImage($target_file);
+                    } else {
+                        $error = true;
+                }
+            }
+        }
         $this->set(get_defined_vars());
     }
 
