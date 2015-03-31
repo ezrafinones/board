@@ -109,4 +109,30 @@ class ThreadController extends AppController
         $this->set(get_defined_vars());
         $this->render($page);
     }
+
+    public function edit_comment()
+    {
+        $comment = new Comment;
+        $page = Param::get('page_next', 'edit_comment');
+        $comment_id = Param::get('id');
+        $comments = Comment::getComment($comment_id);
+
+        switch ($page) {
+            case 'edit_comment':
+                break;
+            case 'write_comment':
+                $comment->body = Param::get('body');
+                try {
+                    $comment->editComment($comment_id);
+                } catch (ValidationException $e) {
+                        $page = 'settings';
+                }
+                break;
+            default:
+                throw new NotFoundException("{$page} is not found");
+                break;
+        }
+        $this->set(get_defined_vars());
+        $this->render($page);
+    }
 }

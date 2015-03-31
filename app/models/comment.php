@@ -33,4 +33,41 @@ class Comment extends AppModel
         return (int) $db->value("SELECT COUNT(*) FROM comment
                             WHERE thread_id = ?", array($thread_id));
     }
+
+    public function editComment($comment_id)
+    {
+        $db = DB::conn();
+        $params = array();
+        $temp = array('body' => $this->body,
+        );
+
+        foreach ($temp as $k => $v) {
+            if (!empty($v)) {
+                $params[$k] = $v;
+            }
+        }
+        if (!empty($params)) {
+            try {
+                $db = DB::conn();
+                $db->begin();
+                $db->update('comment', $params, array('id' => $comment_id));
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollback();
+                throw $e;
+            }
+        }
+    }
+
+    public static function getComment($comment_id)
+    {
+        $user = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment WHERE id = ?", array($comment_id));
+
+        foreach($rows as $row) {
+            $user[] = new self($row);
+        }
+        return $user;
+    }
 }

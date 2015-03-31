@@ -16,6 +16,7 @@
         <div class="well" style="min-height:60px; border-radius:8px; border: 2px dashed #5C5C5C; background-color:#D9D9D9; color:#008AE6">
             <?php echo readable_text($v->body) ?>
         </div>
+        <a class="btn btn-small" name="edit" href="/thread/edit_comment?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
     </div>
 <?php endforeach ?>
 
