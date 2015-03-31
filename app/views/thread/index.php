@@ -14,7 +14,7 @@
                 <?php check_string($v->title) ?></a> 
             </div> 
         </div>
-        <a class="btn btn-small" name="edit" href="/thread/edit?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
+        <a class="btn btn-small" name="edit" href="/thread/edit_thread?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
     </li> 
     <?php endforeach ?>
 </ul>

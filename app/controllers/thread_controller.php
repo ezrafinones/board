@@ -84,15 +84,15 @@ class ThreadController extends AppController
         $this->set(get_defined_vars());
         $this->render($page);
     }
-    public function edit()
+    public function edit_thread()
     {
         $thread = new Thread;
-        $page = Param::get('page_next', 'edit');
+        $page = Param::get('page_next', 'edit_thread');
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
 
         switch ($page) {
-            case 'edit':
+            case 'edit_thread':
                 break;
             case 'write_thread':
                 $thread->title = Param::get('title');

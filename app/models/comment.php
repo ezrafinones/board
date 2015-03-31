@@ -39,6 +39,7 @@ class Comment extends AppModel
         $db = DB::conn();
         $params = array();
         $temp = array('body' => $this->body,
+
         );
 
         foreach ($temp as $k => $v) {
@@ -50,7 +51,8 @@ class Comment extends AppModel
             try {
                 $db = DB::conn();
                 $db->begin();
-                $db->update('comment', $params, array('id' => $comment_id));
+                $db->query('UPDATE comment SET body = ?, created = NOW() 
+                        WHERE id = ?', array($this->body, $comment_id));
                 $db->commit();
             } catch (Exception $e) {
                 $db->rollback();

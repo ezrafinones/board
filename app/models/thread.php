@@ -92,7 +92,8 @@ class Thread extends AppModel
             try {
                 $db = DB::conn();
                 $db->begin();
-                $db->update('thread', $params, array('id' => $thread_id));
+                $db->query('UPDATE thread SET title = ?, created = NOW() 
+                        WHERE id = ?', array($this->title, $thread_id));
                 $db->commit();
             } catch (Exception $e) {
                 $db->rollback();
