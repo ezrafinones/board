@@ -9,17 +9,17 @@
     <?php foreach ($threads as $v): ?>
     <li>
         <div class="well" style="background-color:white; margin-bottom:7px;">
-        <a href="<?php check_string(url('thread/view', array('thread_id' => $v->id))) ?>">
-        <div class="container" style="font-size:18px">
-            <?php check_string($v->title) ?></a>
+            <a href="<?php check_string(url('thread/view', array('thread_id' => $v->id))) ?>">
+            <div class="container" style="font-size:18px">
+                <?php check_string($v->title) ?></a> 
+            </div> 
         </div>
-    </div>
-    </li>
+        <a class="btn btn-small" name="edit" href="/thread/edit?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
+    </li> 
     <?php endforeach ?>
 </ul>
 
 <a class="btn btn-primary" style="padding: 8px 40px;" href="<?php check_string(url('thread/create')) ?>">Create</a>
-
 <br>
 <br>
 

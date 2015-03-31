@@ -122,7 +122,7 @@ class User extends AppModel
         $temp = array('firstname' => $this->firstname,
                     'lastname' => $this->lastname,
                     'email' => $this->email,
-        );   
+        );
 
         foreach ($temp as $k => $v) {
             if (!empty($v)) {
@@ -139,7 +139,7 @@ class User extends AppModel
                 $db->rollback();
                 throw $e;
             }
-        }  
+        }
     }
 
     public function updatePassword()

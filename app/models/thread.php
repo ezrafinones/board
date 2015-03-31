@@ -75,4 +75,41 @@ class Thread extends AppModel
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM thread");
     }
+
+    public function editThread($thread_id)
+    {
+        $db = DB::conn();
+        $params = array();
+        $temp = array('title' => $this->title,
+        );
+
+        foreach ($temp as $k => $v) {
+            if (!empty($v)) {
+                $params[$k] = $v;
+            }
+        }
+        if (!empty($params)) {
+            try {
+                $db = DB::conn();
+                $db->begin();
+                $db->update('thread', $params, array('id' => $thread_id));
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollback();
+                throw $e;
+            }
+        }
+    }
+
+    public static function getThread($thread_id)
+    {
+        $user = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM thread WHERE id = ?", array($thread_id));
+
+        foreach($rows as $row) {
+            $user[] = new self($row);
+        }
+        return $user;
+    }
 }

@@ -3,3 +3,4 @@ app/tmp/logs/*.log
 app/tmp/logs/*
 app/webroot/*
 app/webroot/bootstrap/img/*
+app/webroot/image/*
