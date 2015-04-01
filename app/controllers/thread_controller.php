@@ -164,4 +164,10 @@ class ThreadController extends AppController
         $comment->favorites($user_id, $comment_id, $action);
         redirect(url('thread/view', array('thread_id' => $thread_id)));
     }
+
+    public function top_comments()
+    {
+        $favorites = Comment::getMostFavorites();
+        $this->set(get_defined_vars());
+    }
 }

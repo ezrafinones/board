@@ -117,4 +117,18 @@ class Comment extends AppModel
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM favorites WHERE comment_id = ?", array($comment_id));
     }
-}
+
+
+    public static function getMostFavorites()
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+        foreach ($rows as $row) {
+            $comment_info = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
+            $comments[] = new self(array_merge($row,$comment_info));
+
+        }
+        return $comments;
+    }
+}   
