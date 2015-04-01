@@ -13,6 +13,7 @@ USE board;
                     
 CREATE TABLE IF NOT EXISTS thread (
 id                      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+user_id                 INT UNSIGNED NOT NULL,
 title                   VARCHAR(255) NOT NULL,
 created             	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (id)
