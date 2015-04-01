@@ -45,8 +45,8 @@ class Thread extends AppModel
 
         $db = DB::conn();
         $db->query('INSERT INTO comment 
-                SET thread_id = ?, username = ?, body = ?',
-                array($this->id, Session::get('username'), $comment->body));
+                SET thread_id = ?, username = ?, body = ?, user_id = ?',
+                array($this->id, Session::get('username'), $comment->body, Session::get('id')));
     }
 
     public function create(Comment $comment)
@@ -62,6 +62,7 @@ class Thread extends AppModel
 
         $params = array(
             'title' => $this->title,
+            'user_id' => $this->user_id
         );
 
         $db->insert('thread', $params);
@@ -112,5 +113,19 @@ class Thread extends AppModel
             $user[] = new self($row);
         }
         return $user;
+    }
+
+    public static function deleteThread($thread_id)
+    {
+        $db = DB::conn();
+        try {
+            $db->begin();
+            $db->query('DELETE FROM thread WHERE id = ?', array($thread_id));
+            $db->query('DELETE FROM comment WHERE thread_id = ?', array($thread_id));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
     }
 }

@@ -63,12 +63,14 @@ class ThreadController extends AppController
         $thread = new Thread;
         $comment = new Comment;
         $page = Param::get('page_next', 'create');
+        $user_id = Session::get('id');
 
         switch ($page) {
             case 'create':
                 break;
             case 'create_end':
                 $thread->title = Param::get('title');
+                $thread->user_id = $user_id;
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
                 try {
@@ -134,5 +136,21 @@ class ThreadController extends AppController
         }
         $this->set(get_defined_vars());
         $this->render($page);
+    }
+
+    public function delete_thread()
+    {
+        $thread_id = Param::get('id');
+        $threads = Thread::getThread($thread_id);
+        Thread::deleteThread($thread_id);
+        $this->set(get_defined_vars());
+    }
+
+    public function delete_comment()
+    {
+        $comment_id = Param::get('id');
+        $comments = Comment::getComment($comment_id);
+        Comment::deleteComment($comment_id);
+        $this->set(get_defined_vars());
     }
 }

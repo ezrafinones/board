@@ -72,4 +72,17 @@ class Comment extends AppModel
         }
         return $user;
     }
+
+    public static function deleteComment($comment_id)
+    {
+        $db = DB::conn();
+        try {
+            $db->begin();
+            $db->query('DELETE FROM comment WHERE id = ?', array($comment_id));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+    }
 }
