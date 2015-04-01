@@ -20,9 +20,18 @@ class Comment extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment 
                         WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
-       
+        
         foreach ($rows as $row) {
-           $comments[] = new Comment($row);
+            $favorites = array();
+            $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));     
+            $total_favorites = Comment::countFavorites($row['id']);     
+
+            foreach ($user_favorites as $v) {
+                $favorites[] = $v['user_id'];  
+            }
+            $row['favorites'] = $favorites; 
+            $row['total_favorites'] = $total_favorites;
+            $comments[] = new Comment($row);
         }
         return $comments;
     }
@@ -84,5 +93,28 @@ class Comment extends AppModel
             $db->rollback();
             throw $e;
         }
+    }
+
+    public static function favorites($user_id, $comment_id, $action)
+    {
+        $db = DB::conn();
+        try {
+            $db->begin();
+            if ($action === 'favorite') {
+                $db->insert('favorites', array('user_id' => $user_id, 'comment_id' => $comment_id));
+            } else {
+                $db->query('DELETE FROM favorites WHERE user_id = ? AND comment_id = ?', array($user_id, $comment_id));
+            }
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+    }
+
+    public static function countFavorites($comment_id)
+    {
+        $db = DB::conn();
+        return (int) $db->value("SELECT COUNT(*) FROM favorites WHERE comment_id = ?", array($comment_id));
     }
 }

@@ -5,7 +5,7 @@
 
 <h1><?php check_string($thread->title) ?></h1>
 
-<?php foreach ($threads as $k => $v): ?>
+<?php foreach ($comments as $k => $v): ?>
     <div class="comment">
         <div class="meta" style="font-size:16px">
             <a href="/user/user_profile?user_id=<?php echo $v->user_id ?>"><b><?php check_string($v->username) ?></b></a>
@@ -16,9 +16,16 @@
         <div class="well" style="min-height:60px; border-radius:8px; border: 2px dashed #5C5C5C; background-color:#D9D9D9; color:#008AE6">
             <?php echo readable_text($v->body) ?>
         </div>
+        <?php if (in_array(Session::get('id'), $v->favorites)): ?>
+            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('thread/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => 'unfavorite')))?>">
+                <i class="icon-star" style="background-image:url('/bootstrap/img/glyphicons-halflings-yellow.png')"></i> <?php echo $v->total_favorites ?></a>
+        <?php else: ?>
+            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('thread/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => 'favorite')))?>">
+                <i class="icon-star icon-white"></i> <?php echo $v->total_favorites ?></a>
+        <?php endif ?>
         <?php if (Session::get('id') === $v->user_id): ?>
-        <a class="btn btn-small" name="edit" href="/thread/edit_comment?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
-        <a class="btn btn-small" name="delete" href="/thread/delete_comment?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
+            <a class="btn btn-small" name="edit" href="/thread/edit_comment?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
+            <a class="btn btn-small" name="delete" href="/thread/delete_comment?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
         <?php endif ?>
     </div>
 <?php endforeach ?>

@@ -26,11 +26,10 @@ class ThreadController extends AppController
         $per_page = Thread::MAX_PAGE_SIZE;
         $page = Param::get('page', 1);
         $pagination = new SimplePagination($page, $per_page);
-        $threads = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
-        $pagination->checkLastPage($threads);
+        $comments = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
+        $pagination->checkLastPage($comments);
         $total = Comment::countComments($thread_id);
         $pages = ceil($total / $per_page);
-
         $this->set(get_defined_vars());
     }   
     public function write()
@@ -152,5 +151,17 @@ class ThreadController extends AppController
         $comments = Comment::getComment($comment_id);
         Comment::deleteComment($comment_id);
         $this->set(get_defined_vars());
+    }
+
+    public function favorites()
+    {
+        $comment = new Comment;
+        $action = Param::get('action');
+        $comment_id = Param::get('comment_id');
+        $thread_id = Param::get('thread_id');
+        $user_id = Session::get('id');
+
+        $comment->favorites($user_id, $comment_id, $action);
+        redirect(url('thread/view', array('thread_id' => $thread_id)));
     }
 }

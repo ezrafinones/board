@@ -39,3 +39,10 @@ username                VARCHAR(20) NOT NULL,
 password                VARCHAR(20) NOT NULL,
 PRIMARY KEY (id)   
 )ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS favorites (
+id                      INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+user_id                 INT UNSIGNED NOT NULL,
+comment_id              INT UNSIGNED NOT NULL,
+PRIMARY KEY (id)
+)ENGINE=InnoDB;
