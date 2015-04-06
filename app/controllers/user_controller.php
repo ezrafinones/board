@@ -23,13 +23,12 @@ class UserController extends AppController
                 if (!$this->isMatchPassword()) {
                     $user->validation_errors['password']['match'] = true;
                 }
-
                 try {
                     $user->createImage($default_image);
-                    $user->register();  
+                    $user->register();
                 } catch (ValidationException $e) {
                     $page = 'register';
-                }    
+                }
                 break;
             default:
                 throw new NotFoundException("{$page} is not found");
@@ -160,7 +159,6 @@ class UserController extends AppController
                 try {
                     $users->updateProfile();
                     $users->updatePassword();
-
                 } catch (ValidationException $e) {
                         $page = 'settings';
                         $error = true;
@@ -170,7 +168,6 @@ class UserController extends AppController
                 throw new NotFoundException("{$page} is not found");
                 break;
         }
-
         $this->set(get_defined_vars());
         $this->render($page);
     }
@@ -182,8 +179,8 @@ class UserController extends AppController
         }
         $user_id = Param::get('user_id');
         $user = User::getUserInfo($user_id);
-        $comments = User::getUserComments($user_id);  
-        
+        $comments = User::getUserComments($user_id);
+
         $this->set(get_defined_vars());
     }
 }

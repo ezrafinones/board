@@ -33,24 +33,21 @@
         </ul>
     </div>
     <div class="span8 pull-right">
-    <h3>Your Threads</h3>
-
-<?php foreach ($comments as $k => $v): ?>
-    <article class="comment" style="margin:20px; padding:15px; box-shadow:0px 0px 5px gray; background:none repeat scroll 0% 0% #FFF">
-        <div class="row-fluid">
-            <div>
-                @<b><?php check_string($v->username) ?></b> 
-            </div>
-            <div>
-                <i><?php check_string($v->created) ?></i>
-            </div>
-            <div>
-                <?php echo readable_text($v->body) ?>
-            </div>
-        </div>
-    </article>
-<?php endforeach ?>
-  
+        <h3>Your Threads</h3>
+        <?php foreach ($comments as $k => $v): ?>
+            <article class="comment" style="margin:20px; padding:15px; box-shadow:0px 0px 5px gray; background:none repeat scroll 0% 0% #FFF">
+                <div class="row-fluid">
+                    <div>
+                        @<b><?php check_string($v->username) ?></b>
+                    </div>
+                    <div>
+                        <i><?php check_string($v->created) ?></i>
+                    </div>
+                    <div>
+                        <?php echo readable_text($v->body) ?>
+                    </div>
+                </div>
+            </article>
+        <?php endforeach ?>
     </div>
 </div>
-

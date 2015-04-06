@@ -132,11 +132,12 @@ class Thread extends AppModel
     {
         $threads = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites 
-                    FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+
+        $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
+                    GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
         foreach ($rows as $row) {
-            $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['comment_id']));
-            $thread_username = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
+            $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['thread_id']));
+            $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($row['thread_id']));
             $threads[] = new self(array_merge($row, $thread_info, $thread_username));
         }
         return $threads;

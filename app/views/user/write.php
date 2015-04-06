@@ -1,7 +1,6 @@
 <?php if ($userinfo->hasError()): ?>
     <div class="alert alert-block">
         <h4 class="alert-heading">Validation error!</h4>
-     
         <?php if (!empty($userinfo->validation_errors['firstname']['length'])): ?>
             <div><em>First Name</em> must be
             between
@@ -9,7 +8,6 @@
                 <?php check_string($userinfo->validation['firstname']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-
         <?php if (!empty($userinfo->validation_errors['lastname']['length'])): ?>
             <div><em>Last Name</em> must be
                 between 

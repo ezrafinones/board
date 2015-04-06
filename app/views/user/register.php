@@ -5,7 +5,7 @@
         <div class="alert alert-block">
             <h4 class="alert-heading">Validation error!</h4>
             <?php if (!empty($user->validation_errors['user']['exist'])): ?>
-                <div><em>You have already have existing account</em>             
+                <div><em>You have already have existing account</em>
                 </div>
             <?php endif ?>
             <?php if (!empty($user->validation_errors['firstname']['length'])): ?>
@@ -68,4 +68,4 @@
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
     <input type="hidden" name="page_next" value="write_end">
     <button type="submit" class="btn btn-inverse">Register</button>
-</form> 
+</form>

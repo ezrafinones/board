@@ -4,9 +4,9 @@ class User extends AppModel
     const MIN_LENGTH = 1;
 
     const MAX_NAME_LENGTH = 254;
-    const MAX_EMAIL_LENGTH = 30; 
-    const MAX_USERNAME_LENGTH = 30;
-    const MAX_PASSWORD_LENGTH = 254;
+    const MAX_EMAIL_LENGTH = 254; 
+    const MAX_USERNAME_LENGTH = 20;
+    const MAX_PASSWORD_LENGTH = 20;
 
     public $validation = array(
         'firstname' => array(
@@ -150,9 +150,8 @@ class User extends AppModel
                         'validate_password' => md5($this->cnewpassword),
             );
             $db = DB::conn();
-            $row = $db->row('SELECT password FROM user 
-                        WHERE id = ?', array(Session::get('id')));
-            
+            $row = $db->row('SELECT password FROM user WHERE id = ?', array(Session::get('id')));
+
             if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {
                  try {
                     $db->begin();
@@ -167,7 +166,7 @@ class User extends AppModel
             }
         } else {
                 throw new ValidationException('Password Mismatch');
-        } 
+        }
     }
 
     public static function getUserInfo($user_id)
@@ -199,7 +198,7 @@ class User extends AppModel
         $db = DB::conn();
         $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
         return $image['image'];
-    } 
+    }
 
     public function createImage($default_image)
     {

@@ -42,4 +42,4 @@
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
     <input type="hidden" name="page_next" value="write_success">
     <button type="submit" class="btn btn-inverse">Change Password</button>
-</form> 
+</form>
