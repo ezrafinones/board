@@ -127,7 +127,6 @@ class Comment extends AppModel
         foreach ($rows as $row) {
             $comment_info = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
             $comments[] = new self(array_merge($row,$comment_info));
-
         }
         return $comments;
     }

@@ -3,6 +3,7 @@
     <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="/thread/index"> Threads <b class="caret"></b></a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li><a href="/thread/index">Threads</a></li>
             <li><a href="/thread/top_comments"> Top Comments</a></li>
             <li><a href="/thread/top_threads"> Top Threads</a></li>
         </ul>

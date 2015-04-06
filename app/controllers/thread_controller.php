@@ -170,4 +170,10 @@ class ThreadController extends AppController
         $favorites = Comment::getMostFavorites();
         $this->set(get_defined_vars());
     }
+
+    public function top_threads()
+    {
+        $favorites = Thread::getMostFavorites();
+        $this->set(get_defined_vars());
+    }
 }

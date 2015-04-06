@@ -128,4 +128,16 @@ class Thread extends AppModel
             throw $e;
         }
     }
+
+    public static function getMostFavorites()
+    {
+        $threads = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+        foreach ($rows as $row) {
+            $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['comment_id']));
+            $threads[] = new self(array_merge($row, $thread_info));
+        }
+        return $threads;
+    }
 }
