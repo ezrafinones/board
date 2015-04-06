@@ -1,14 +1,3 @@
-<ul class="nav nav-pills">
-    <li><a href="/user/profile">Profile</a></li>
-    <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="/thread/index"> Threads <b class="caret"></b></a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li><a href="/thread/index">Threads</a></li>
-            <li><a href="/thread/top_comments"> Top Comments</a></li>
-            <li><a href="/thread/top_threads"> Top Threads</a></li>
-        </ul>
-    </li>    
-</ul>
 <h1>All threads</h1>
 
 <ul style='list-style:none;'>

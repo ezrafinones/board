@@ -65,7 +65,7 @@ class User extends AppModel
         $db->insert('user', $params);
         $db->commit();
     }
-    
+
     public function login(LoginInfo $login_info)
     {
         $login_info->validate();
@@ -90,7 +90,7 @@ class User extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM user WHERE id = ?", array(Session::get('id')));
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $user[] = new self($row);
         }
         return $user;
@@ -103,7 +103,7 @@ class User extends AppModel
         $rows = $db->rows("SELECT * FROM comment 
                     WHERE username = ?", array(Session::get('username')));
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $comments[] = new self($row);
         }
         return $comments;
@@ -129,6 +129,7 @@ class User extends AppModel
                 $params[$k] = $v;
             }
         }
+
         if (!empty($params)) {
             try {
                 $db = DB::conn();
@@ -175,7 +176,7 @@ class User extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM user WHERE id = ?", array($user_id));
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $user[] = new self($row);
         }
         return $user;
@@ -187,7 +188,7 @@ class User extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment WHERE user_id = ?", array($user_id));
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $comments[] = new self($row);
         }
         return $comments;

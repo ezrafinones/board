@@ -44,8 +44,7 @@ class Thread extends AppModel
         }
 
         $db = DB::conn();
-        $db->query('INSERT INTO comment 
-                SET thread_id = ?, username = ?, body = ?, user_id = ?',
+        $db->query('INSERT INTO comment SET thread_id = ?, username = ?, body = ?, user_id = ?',
                 array($this->id, Session::get('username'), $comment->body, Session::get('id')));
     }
 
@@ -81,19 +80,19 @@ class Thread extends AppModel
     {
         $db = DB::conn();
         $params = array();
-        $temp = array('title' => $this->title,
-        );
+        $temp = array('title' => $this->title);
 
         foreach ($temp as $k => $v) {
             if (!empty($v)) {
                 $params[$k] = $v;
             }
         }
+
         if (!empty($params)) {
             try {
                 $db = DB::conn();
                 $db->begin();
-                $db->query('UPDATE thread SET title = ?, created = NOW() 
+                $db->query('UPDATE thread SET title = ?, created = NOW()
                         WHERE id = ?', array($this->title, $thread_id));
                 $db->commit();
             } catch (Exception $e) {
@@ -109,7 +108,7 @@ class Thread extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread WHERE id = ?", array($thread_id));
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $user[] = new self($row);
         }
         return $user;
@@ -133,10 +132,12 @@ class Thread extends AppModel
     {
         $threads = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites 
+                    FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
         foreach ($rows as $row) {
             $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['comment_id']));
-            $threads[] = new self(array_merge($row, $thread_info));
+            $thread_username = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
+            $threads[] = new self(array_merge($row, $thread_info, $thread_username));
         }
         return $threads;
     }

@@ -28,10 +28,11 @@ class ThreadController extends AppController
         $pagination = new SimplePagination($page, $per_page);
         $comments = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($comments);
-        $total = Comment::countComments($thread_id);
+        $total = Comment::totalComments($thread_id);
         $pages = ceil($total / $per_page);
         $this->set(get_defined_vars());
-    }   
+    }
+
     public function write()
     {
         $thread = Thread::get(Param::get('thread_id'));
@@ -85,6 +86,7 @@ class ThreadController extends AppController
         $this->set(get_defined_vars());
         $this->render($page);
     }
+
     public function edit_thread()
     {
         $thread = new Thread;

@@ -1,5 +1,5 @@
 <h2><?php check_string($thread->title) ?></h2>
- 
+
 <?php if ($comment->hasError()): ?>
     <div class="alert alert-block">
         <h4 class="alert-heading">Validation error!</h4

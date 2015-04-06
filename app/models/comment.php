@@ -20,7 +20,7 @@ class Comment extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment 
                         WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
-        
+
         foreach ($rows as $row) {
             $favorites = array();
             $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));     
@@ -36,20 +36,17 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function countComments($thread_id)
+    public static function totalComments($thread_id)
     {
         $db = DB::conn();
-        return (int) $db->value("SELECT COUNT(*) FROM comment
-                            WHERE thread_id = ?", array($thread_id));
+        return (int) $db->value("SELECT COUNT(*) FROM comment WHERE thread_id = ?", array($thread_id));
     }
 
     public function editComment($comment_id)
     {
         $db = DB::conn();
         $params = array();
-        $temp = array('body' => $this->body,
-
-        );
+        $temp = array('body' => $this->body);
 
         foreach ($temp as $k => $v) {
             if (!empty($v)) {
@@ -60,7 +57,7 @@ class Comment extends AppModel
             try {
                 $db = DB::conn();
                 $db->begin();
-                $db->query('UPDATE comment SET body = ?, created = NOW() 
+                $db->query('UPDATE comment SET body = ?, created = NOW()
                         WHERE id = ?', array($this->body, $comment_id));
                 $db->commit();
             } catch (Exception $e) {
@@ -118,16 +115,16 @@ class Comment extends AppModel
         return (int) $db->value("SELECT COUNT(*) FROM favorites WHERE comment_id = ?", array($comment_id));
     }
 
-
     public static function getMostFavorites()
     {
         $comments = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites 
+                    FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
         foreach ($rows as $row) {
             $comment_info = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
             $comments[] = new self(array_merge($row,$comment_info));
         }
         return $comments;
     }
-}   
+}
