@@ -7,6 +7,6 @@
             <br>
         <?php endforeach ?>
     </ul>
-    <input type="hidden" name="page_next" value="write_comment">
+    <input type="hidden" name="page_next" value="write">
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>

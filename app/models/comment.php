@@ -36,13 +36,13 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function totalComments($thread_id)
+    public static function total($thread_id)
     {
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM comment WHERE thread_id = ?", array($thread_id));
     }
 
-    public function editComment($comment_id)
+    public function edit($comment_id)
     {
         $db = DB::conn();
         $params = array();
@@ -79,7 +79,7 @@ class Comment extends AppModel
         return $user;
     }
 
-    public static function deleteComment($comment_id)
+    public static function delete($comment_id)
     {
         $db = DB::conn();
         try {

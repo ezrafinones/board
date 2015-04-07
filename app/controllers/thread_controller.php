@@ -28,7 +28,7 @@ class ThreadController extends AppController
         $pagination = new SimplePagination($page, $per_page);
         $comments = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($comments);
-        $total = Comment::totalComments($thread_id);
+        $total = Comment::total($thread_id);
         $pages = ceil($total / $per_page);
         $this->set(get_defined_vars());
     }
@@ -87,15 +87,15 @@ class ThreadController extends AppController
         $this->render($page);
     }
 
-    public function edit_thread()
+    public function edit()
     {
         $thread = new Thread;
-        $page = Param::get('page_next', 'edit_thread');
+        $page = Param::get('page_next', 'edit');
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
 
         switch ($page) {
-            case 'edit_thread':
+            case 'edit':
                 break;
             case 'write_thread':
                 $thread->title = Param::get('title');
@@ -113,7 +113,7 @@ class ThreadController extends AppController
         $this->render($page);
     }
 
-    public function delete_thread()
+    public function delete()
     {
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
@@ -121,7 +121,7 @@ class ThreadController extends AppController
         $this->set(get_defined_vars());
     }
 
-    public function top_threads()
+    public function top()
     {
         $favorites = Thread::getMostFavorites();
         $this->set(get_defined_vars());

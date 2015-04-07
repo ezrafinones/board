@@ -1,20 +1,20 @@
 <?php
 class CommentController extends AppController
 {
-    public function edit_comment()
+    public function edit()
     {
         $comment = new Comment;
-        $page = Param::get('page_next', 'edit_comment');
+        $page = Param::get('page_next', 'edit');
         $comment_id = Param::get('id');
         $comments = Comment::getComment($comment_id);
 
         switch ($page) {
-            case 'edit_comment':
+            case 'edit':
                 break;
-            case 'write_comment':
+            case 'write':
                 $comment->body = Param::get('body');
                 try {
-                    $comment->editComment($comment_id);
+                    $comment->edit($comment_id);
                 } catch (ValidationException $e) {
                         $page = 'settings';
                 }
@@ -27,11 +27,11 @@ class CommentController extends AppController
         $this->render($page);
     }
 
-    public function delete_comment()
+    public function delete()
     {
         $comment_id = Param::get('id');
         $comments = Comment::getComment($comment_id);
-        Comment::deleteComment($comment_id);
+        Comment::delete($comment_id);
         $this->set(get_defined_vars());
     }
 
@@ -47,7 +47,7 @@ class CommentController extends AppController
         redirect(url('thread/view', array('thread_id' => $thread_id)));
     }
 
-    public function top_comments()
+    public function top()
     {
         $favorites = Comment::getMostFavorites();
         $this->set(get_defined_vars());
