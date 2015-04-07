@@ -93,6 +93,7 @@ class ThreadController extends AppController
         $page = Param::get('page_next', 'edit');
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
+        $error = false;
 
         switch ($page) {
             case 'edit':
@@ -100,9 +101,10 @@ class ThreadController extends AppController
             case 'write_thread':
                 $thread->title = Param::get('title');
                 try {
-                    $thread->editThread($thread_id);
-                } catch (ValidationException $e) {
-                        $page = 'settings';
+                    $thread->edit($thread_id);
+                } catch (RecordNotFoundException $e) {
+                        $page = 'edit';
+                        $error = true;
                 }
                 break;
             default:
@@ -113,11 +115,24 @@ class ThreadController extends AppController
         $this->render($page);
     }
 
+    public function redirect_delete()
+    {
+        $thread_id = Param::get('id');
+        $threads = Thread::getThread($thread_id);
+
+        $this->set(get_defined_vars());
+    }
+
     public function delete()
     {
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
-        Thread::deleteThread($thread_id);
+
+        try {
+            Thread::delete($thread_id);
+        } catch (ValidationException $e) {
+            redirect(url('thread/index', array('thread_id' => $thread_id)));
+        }
         $this->set(get_defined_vars());
     }
 

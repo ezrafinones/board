@@ -11,7 +11,7 @@
         </div>
         <?php if (Session::get('id') === $v->user_id): ?>
         <a class="btn btn-small" name="edit" href="/thread/edit?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
-        <a class="btn btn-small" name="delete" href="/thread/delete?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
+        <a class="btn btn-small" name="delete" href="/thread/redirect_delete?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
         <?php endif ?>
     </li> 
     <?php endforeach ?>

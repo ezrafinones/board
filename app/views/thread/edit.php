@@ -1,5 +1,10 @@
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>Edit Thread</h4>
+
+<?php if ($error): ?>
+        <h5 class="alert alert-block">Invalid input</h5>
+<?php endif ?>
+
     <ul style='list-style:none;'>
         <?php foreach ($threads as $v): ?>
             <li><?php echo "Title"?></li>

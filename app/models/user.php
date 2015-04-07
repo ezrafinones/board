@@ -4,7 +4,7 @@ class User extends AppModel
     const MIN_LENGTH = 1;
 
     const MAX_NAME_LENGTH = 254;
-    const MAX_EMAIL_LENGTH = 254; 
+    const MAX_EMAIL_LENGTH = 254;
     const MAX_USERNAME_LENGTH = 20;
     const MAX_PASSWORD_LENGTH = 20;
 
@@ -181,18 +181,6 @@ class User extends AppModel
         return $user;
     }
 
-    public static function getUserComments($user_id)
-    {
-        $comments = array();
-        $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM comment WHERE user_id = ?", array($user_id));
-
-        foreach ($rows as $row) {
-            $comments[] = new self($row);
-        }
-        return $comments;
-    }
-
     public static function getImage()
     {
         $db = DB::conn();
@@ -213,7 +201,7 @@ class User extends AppModel
         }
     }
 
-    public function uploadImage($target_file)
+    public static function uploadImage($target_file)
     {
         $db = DB::conn();
         try {

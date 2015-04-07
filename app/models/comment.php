@@ -23,11 +23,11 @@ class Comment extends AppModel
 
         foreach ($rows as $row) {
             $favorites = array();
-            $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));     
-            $total_favorites = Comment::countFavorites($row['id']);     
+            $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));
+            $total_favorites = Comment::countFavorites($row['id']);
 
             foreach ($user_favorites as $v) {
-                $favorites[] = $v['user_id'];  
+                $favorites[] = $v['user_id'];
             }
             $row['favorites'] = $favorites; 
             $row['total_favorites'] = $total_favorites;
@@ -44,26 +44,19 @@ class Comment extends AppModel
 
     public function edit($comment_id)
     {
-        $db = DB::conn();
-        $params = array();
-        $temp = array('body' => $this->body);
-
-        foreach ($temp as $k => $v) {
-            if (!empty($v)) {
-                $params[$k] = $v;
-            }
+        if (!$this->body) {
+            throw new RecordNotFoundException('Record Not Found');
         }
-        if (!empty($params)) {
-            try {
-                $db = DB::conn();
-                $db->begin();
-                $db->query('UPDATE comment SET body = ?, created = NOW()
-                        WHERE id = ?', array($this->body, $comment_id));
-                $db->commit();
-            } catch (Exception $e) {
-                $db->rollback();
-                throw $e;
-            }
+        
+        try {
+            $db = DB::conn();
+            $db->begin();
+            $db->query('UPDATE comment SET body = ?, created = NOW()
+                    WHERE id = ?', array($this->body, $comment_id));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
         }
     }
 
@@ -77,6 +70,18 @@ class Comment extends AppModel
             $user[] = new self($row);
         }
         return $user;
+    }
+
+    public static function getUserComments($user_id)
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment WHERE user_id = ?", array($user_id));
+
+        foreach ($rows as $row) {
+            $comments[] = new self($row);
+        }
+        return $comments;
     }
 
     public static function delete($comment_id)

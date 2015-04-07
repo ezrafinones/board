@@ -76,29 +76,21 @@ class Thread extends AppModel
         return (int) $db->value("SELECT COUNT(*) FROM thread");
     }
 
-    public function editThread($thread_id)
+    public function edit($thread_id)
     {
-        $db = DB::conn();
-        $params = array();
-        $temp = array('title' => $this->title);
-
-        foreach ($temp as $k => $v) {
-            if (!empty($v)) {
-                $params[$k] = $v;
-            }
+        if (!$this->title) {
+            throw new RecordNotFoundException('Record Not Found');
         }
 
-        if (!empty($params)) {
-            try {
-                $db = DB::conn();
-                $db->begin();
-                $db->query('UPDATE thread SET title = ?, created = NOW()
-                        WHERE id = ?', array($this->title, $thread_id));
-                $db->commit();
-            } catch (Exception $e) {
-                $db->rollback();
-                throw $e;
-            }
+        try {
+            $db = DB::conn();
+            $db->begin();
+            $db->query('UPDATE thread SET title = ?, created = NOW()
+                    WHERE id = ?', array($this->title, $thread_id));
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
         }
     }
 
@@ -114,7 +106,7 @@ class Thread extends AppModel
         return $user;
     }
 
-    public static function deleteThread($thread_id)
+    public static function delete($thread_id)
     {
         $db = DB::conn();
         try {

@@ -88,9 +88,9 @@ class UserController extends AppController
 
         $user = User::getAll();
         $comments = User::getComments();
-        $users = new User;
         $image = User::getImage(); 
         $error = false;
+        $this->set(get_defined_vars());
 
         if (!isset($_FILES["image"])) {
             return;
@@ -98,7 +98,7 @@ class UserController extends AppController
 
         $target_dir = "image/";
         $target_file = $image;
-        $image_file_type = pathinfo($target_file,PATHINFO_EXTENSION);
+        $image_file_type = pathinfo($target_file, PATHINFO_EXTENSION);
         $target_file = $target_dir . $_SESSION['username'].".{$image_file_type}";
         $is_uploaded = true;
 
@@ -117,15 +117,12 @@ class UserController extends AppController
             $error = true;
         }
 
-        if ($is_uploaded == true) {
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                $target_file = "/" . $target_file;
-                $users->uploadImage($target_file);
-            } else {
-                $error = true;
-            }
+        if ($is_uploaded == true && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $target_file = "/" . $target_file;
+            User::uploadImage($target_file);
+        } else {
+            $error = true;
         }
-        $this->set(get_defined_vars());
     }
 
     public function logout()
@@ -136,9 +133,9 @@ class UserController extends AppController
 
     public function settings()
     {
-        $users = new User;
         $page = Param::get('page_next', 'settings');
         $user = User::getAll();
+        $save = Param::get('save');
         $error = false;
 
         switch ($page) {
@@ -179,7 +176,7 @@ class UserController extends AppController
         }
         $user_id = Param::get('user_id');
         $user = User::getUserInfo($user_id);
-        $comments = User::getUserComments($user_id);
+        $comments = Comment::getUserComments($user_id);
 
         $this->set(get_defined_vars());
     }

@@ -16,13 +16,13 @@
     </ul>
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
     <input type="hidden" name="page_next" value="write_success">
-    <button type="submit" class="btn btn-inverse">Save</button>
+    <button type="submit" name="save" class="btn btn-inverse">Save</button>
 </form> 
 
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>Change Password</h4>
 
-<?php if ($error): ?>
+<?php if (!isset($save) && $error): ?>
     <div class="alert alert-block">
         <h5 class="alert-heading">Password Mismatch</h5>
     </div>

@@ -7,6 +7,7 @@ class CommentController extends AppController
         $page = Param::get('page_next', 'edit');
         $comment_id = Param::get('id');
         $comments = Comment::getComment($comment_id);
+        $error = false;
 
         switch ($page) {
             case 'edit':
@@ -15,8 +16,9 @@ class CommentController extends AppController
                 $comment->body = Param::get('body');
                 try {
                     $comment->edit($comment_id);
-                } catch (ValidationException $e) {
-                        $page = 'settings';
+                } catch (RecordNotFoundException $e) {
+                        $page = 'edit';
+                        $error = true;
                 }
                 break;
             default:
@@ -27,11 +29,24 @@ class CommentController extends AppController
         $this->render($page);
     }
 
+    public function redirect_delete()
+    {
+        $comment_id = Param::get('id');
+        $comments = Comment::getComment($comment_id);
+
+        $this->set(get_defined_vars());
+    }
+
     public function delete()
     {
         $comment_id = Param::get('id');
         $comments = Comment::getComment($comment_id);
-        Comment::delete($comment_id);
+
+        try {
+            Comment::delete($comment_id);
+        } catch (ValidationException $e) {
+            redirect(url('thread/view', array('thread_id' => $comment->thread_id)));
+        }
         $this->set(get_defined_vars());
     }
 

@@ -20,7 +20,7 @@
         <?php endif ?>
         <?php if (Session::get('id') === $v->user_id): ?>
             <a class="btn btn-small" name="edit" href="/comment/edit?id=<?php echo $v->id ?>"><i class="icon-pencil"></i></a>
-            <a class="btn btn-small" name="delete" href="/comment/delete?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
+            <a class="btn btn-small" name="delete" href="/comment/redirect_delete?id=<?php echo $v->id ?>" ><i class="icon-trash"></i></a>
         <?php endif ?>
     </div>
 <?php endforeach ?>
