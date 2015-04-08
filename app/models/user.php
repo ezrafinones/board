@@ -86,11 +86,11 @@ class User extends AppModel
         Session::set('id', $row['id']);
     }
 
-    public static function getUserById()
+    public static function getUserById($id)
     {
         $user = array();
         $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM user WHERE id = ?", array(Session::get('id')));
+        $rows = $db->rows("SELECT * FROM user WHERE id = ?", array($id));
 
         foreach ($rows as $row) {
             $user[] = new self($row);
@@ -102,10 +102,10 @@ class User extends AppModel
         return $user;
     }
 
-    public function getById()
+    public function getById($id)
     {
         $db = DB::conn();
-        $id = $db->row("SELECT id FROM user WHERE id = ?", array(Session::get('id')));
+        $id = $db->row("SELECT id FROM user WHERE id = ?", array($id));
         $this->id = $id['id'];
     }
 
@@ -136,14 +136,14 @@ class User extends AppModel
         }
     }
 
-    public function updatePassword()
+    public function updatePassword($id)
     {
         if (!empty($this->newpassword) && !empty($this->cnewpassword)) {
             $params = array('password' => md5($this->newpassword),
                         'validate_password' => md5($this->cnewpassword),
             );
             $db = DB::conn();
-            $row = $db->row('SELECT password FROM user WHERE id = ?', array(Session::get('id')));
+            $row = $db->row('SELECT password FROM user WHERE id = ?', array($id));
 
             if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {
                  try {
@@ -178,23 +178,23 @@ class User extends AppModel
         return $user;
     }
 
-    public static function getImage()
+    public static function getImage($id)
     {
         $db = DB::conn();
 
-        $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
+        $image = $db->row('SELECT image FROM user WHERE id = ?', array($id));
         if (!$image) {    
             throw new RecordNotFoundException('Image not found');
         }
         return $image['image'];
     }
 
-    public function createImage($default_image)
+    public function createImage($default_image, $id)
     {
         $db = DB::conn();
         try {
             $db->begin();
-            $db->update('user', array('image' => $default_image), array('id' => Session::get('id')));
+            $db->update('user', array('image' => $default_image), array('id' => $id));
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
@@ -202,12 +202,12 @@ class User extends AppModel
         }
     }
 
-    public static function uploadImage($target_file)
+    public static function uploadImage($target_file, $id)
     {
         $db = DB::conn();
         try {
             $db->begin();
-            $db->update('user', array('image' => $target_file), array('id' => Session::get('id')));
+            $db->update('user', array('image' => $target_file), array('id' => $id));
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();

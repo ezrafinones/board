@@ -45,7 +45,7 @@ class ThreadController extends AppController
             case 'write_end':
                 $comment->body = Param::get('body');
                 try{
-                    $thread->write($comment);
+                    $thread->write($comment, Session::get('username'), Session::get('id'));
                 } catch(ValidationException $e) {
                     $page = 'write';
                 }
@@ -74,7 +74,7 @@ class ThreadController extends AppController
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
                 try {
-                    $thread->create($comment);
+                    $thread->create($comment, Session::get('username'), Session::get('id'));
                 } catch (ValidationException $e) {
                     $page = 'create';
                 }

@@ -26,7 +26,7 @@ class UserController extends AppController
                     $user->validation_errors['password']['match'] = true;
                 }
                 try {
-                    $user->createImage($default_image);
+                    $user->createImage($default_image, Session::get('id'));
                     if(!(preg_match("/^[a-zA-Z0-9]+$/", Param::get('username'))) || !(preg_match("/^[a-zA-Z ]+$/", $name))) {
                         $error = true;
                     }
@@ -91,8 +91,8 @@ class UserController extends AppController
             redirect(url('user/login'));
         }
 
-        $user = User::getUserById();
-        $comments = Comment::getCommentsByUsername();
+        $user = User::getUserById(Session::get('id'));
+        $comments = Comment::getCommentsByUsername(Session::get('username'));
         $this->set(get_defined_vars());
         $this->upload_photo();
     }
@@ -101,7 +101,7 @@ class UserController extends AppController
     {
         $error = false;
         try {
-            $image = User::getImage(); 
+            $image = User::getImage(Session::get('id')); 
         } catch (RecordNotFoundException $e) {
             $error = true;
         }
@@ -126,7 +126,7 @@ class UserController extends AppController
 
         if ($is_uploaded == true && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             $target_file = "/" . $target_file;
-            User::uploadImage($target_file);
+            User::uploadImage($target_file, Session::get('id'));
         } else {
             $error = true;
         }
@@ -141,7 +141,7 @@ class UserController extends AppController
     public function settings()
     {
         $page = Param::get('page_next', 'settings');
-        $user = User::getUserById();
+        $user = User::getUserById(Session::get('id'));
         $save = Param::get('save');
         $error = $error_input = false;
 
@@ -158,7 +158,7 @@ class UserController extends AppController
                     'cnewpassword' => Param::get('cnewpassword')
                 );
                 $users = new User($params);
-                $users->getById();
+                $users->getById(Session::get('id'));
                 $name = Param::get('firstname').Param::get('lastname');
 
                 try {
@@ -166,7 +166,7 @@ class UserController extends AppController
                         $error_input = true;
                     }
                     $users->updateProfile();
-                    $users->updatePassword();
+                    $users->updatePassword(Session::get('id'));
                 } catch (ValidationException $e) {
                         $page = 'settings';
                         $error = true;

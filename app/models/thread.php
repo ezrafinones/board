@@ -41,7 +41,7 @@ class Thread extends AppModel
         return new self($row);
     }
 
-    public function write(Comment $comment)
+    public function write($comment, $username, $id)
     {
         if (!$comment->validate()) {
            throw new ValidationException('invalid comment');
@@ -49,10 +49,10 @@ class Thread extends AppModel
 
         $db = DB::conn();
         $db->query('INSERT INTO comment SET thread_id = ?, username = ?, body = ?, user_id = ?',
-                array($this->id, Session::get('username'), $comment->body, Session::get('id')));
+                array($this->id, $username, $comment->body, $id));
     }
 
-    public function create(Comment $comment)
+    public function create($comment, $username, $id)
     {
         $this->validate();
         $comment->validate();
@@ -70,7 +70,7 @@ class Thread extends AppModel
 
         $db->insert('thread', $params);
         $this->id = $db->lastInsertId();
-        $this->write($comment);
+        $this->write($comment, $username, $id);
         $db->commit();
     }
 
@@ -89,8 +89,7 @@ class Thread extends AppModel
         try {
             $db = DB::conn();
             $db->begin();
-            $db->query('UPDATE thread SET title = ?, created = NOW()
-                    WHERE id = ?', array($this->title, $thread_id));
+            $db->query('UPDATE thread SET title = ?, WHERE id = ?', array($this->title, $thread_id));
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
