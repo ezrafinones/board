@@ -181,6 +181,7 @@ class User extends AppModel
     public static function getImage()
     {
         $db = DB::conn();
+        
         $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
         if (!$image) {    
             throw new RecordNotFoundException('Image not found');

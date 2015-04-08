@@ -6,7 +6,7 @@ class CommentController extends AppController
         $comment = new Comment;
         $page = Param::get('page_next', 'edit');
         $comment_id = Param::get('id');
-        $comments = Comment::getComment($comment_id);
+        $comments = Comment::getCommentsInfo($comment_id);
         $error = false;
 
         switch ($page) {
@@ -32,7 +32,7 @@ class CommentController extends AppController
     public function redirect_delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getComment($comment_id);
+        $comments = Comment::getCommentsInfo($comment_id);
 
         $this->set(get_defined_vars());
     }
@@ -40,25 +40,24 @@ class CommentController extends AppController
     public function delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getComment($comment_id);
+        $comments = Comment::getCommentsInfo($comment_id);
 
         try {
             Comment::delete($comment_id);
         } catch (ValidationException $e) {
-            redirect(url('thread/view', array('thread_id' => $comment->thread_id)));
+            redirect(url('thread/view', array('thread_id' => $comments->thread_id)));
         }
         $this->set(get_defined_vars());
     }
 
     public function favorites()
     {
-        $comment = new Comment;
         $action = Param::get('action');
         $comment_id = Param::get('comment_id');
         $thread_id = Param::get('thread_id');
         $user_id = Session::get('id');
 
-        $comment->favorites($user_id, $comment_id, $action);
+        Favorites::vote($user_id, $comment_id, $action);
         redirect(url('thread/view', array('thread_id' => $thread_id)));
     }
 
