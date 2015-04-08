@@ -92,32 +92,30 @@ class UserController extends AppController
         }
 
         $user = User::getAll();
-        $comments = User::getComments();
+        $comments = Comment::getUserComment();
+        $this->set(get_defined_vars());
+        $this->upload_photo();
+    }
+
+    public function upload_photo()
+    {
         $image = User::getImage(); 
         $error = false;
         $this->set(get_defined_vars());
-
-        if (!isset($_FILES["image"])) {
+ 
+        if ((!isset($_FILES["image"])) && (!isset($_POST["submit"]))) {
             return;
         }
 
         $target_dir = "image/";
         $target_file = $image;
-        $image_file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-        $target_file = $target_dir . $_SESSION['username'].".{$image_file_type}";
+        $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+        $target_file = $target_dir . $_SESSION['username'].".{$file_type}";
         $is_uploaded = true;
+        $info =  $_FILES["image"]["tmp_name"];
 
-        if (!isset($_POST["submit"])) {
-            return;
-        }
-        
-        if (getimagesize($_FILES["image"]["tmp_name"]) === false) {
-            $is_uploaded = false;
-            $error = true;
-        }
-
-        if ($_FILES["image"]["size"] > 500000 && $image_file_type != "jpg" && $image_file_type != "png"
-        && $image_file_type != "jpeg" && $image_file_type != "gif") {
+        if (getimagesize($info) === false && $info > user::MAX_FILE_UPLOAD && $file_type != "jpg" && 
+        $file_type != "png" && $file_type != "jpeg" && $file_type != "gif") {
             $is_uploaded = false;
             $error = true;
         }
@@ -141,7 +139,7 @@ class UserController extends AppController
         $page = Param::get('page_next', 'settings');
         $user = User::getAll();
         $save = Param::get('save');
-        $error = false;
+        $error = $error_input = false;
 
         switch ($page) {
             case 'settings':
@@ -157,8 +155,12 @@ class UserController extends AppController
                 );
                 $users = new User($params);
                 $users->getId();
+                $name = Param::get('firstname').Param::get('lastname');
 
                 try {
+                    if(!(preg_match("/^[a-zA-Z ]+$/", $name))) {
+                        $error_input = true;
+                    }
                     $users->updateProfile();
                     $users->updatePassword();
                 } catch (ValidationException $e) {

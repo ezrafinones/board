@@ -1,6 +1,10 @@
 <h3>Account Settings</h3>
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>User Profile Information</h4>
+<?php if ($error_input): ?>
+    <h5 class="alert alert-block">Invalid Input</h5>
+<?php endif ?>
+
     <ul style='list-style:none;'>
         <?php foreach ($user as $v): ?>
             <li><?php echo "Edit First Name: "?></li>

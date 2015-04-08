@@ -8,6 +8,8 @@ class User extends AppModel
     const MAX_USERNAME_LENGTH = 20;
     const MAX_PASSWORD_LENGTH = 20;
 
+    const MAX_FILE_UPLOAD = 500000;
+
     public $validation = array(
         'firstname' => array(
             'length' => array(
@@ -94,19 +96,6 @@ class User extends AppModel
             $user[] = new self($row);
         }
         return $user;
-    }
-
-    public static function getComments()
-    {
-        $comments = array();
-        $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM comment 
-                    WHERE username = ?", array(Session::get('username')));
-
-        foreach ($rows as $row) {
-            $comments[] = new self($row);
-        }
-        return $comments;
     }
 
     public function getId()

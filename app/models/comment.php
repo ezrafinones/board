@@ -72,6 +72,18 @@ class Comment extends AppModel
         return $user;
     }
 
+    public static function getUserComment()
+    {
+        $comments = array();
+        $db = DB::conn();
+        $rows = $db->rows("SELECT * FROM comment WHERE username = ?", array(Session::get('username')));
+
+        foreach ($rows as $row) {
+            $comments[] = new self($row);
+        }
+        return $comments;
+    }
+
     public static function getUserComments($user_id)
     {
         $comments = array();
