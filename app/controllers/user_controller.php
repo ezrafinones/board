@@ -91,8 +91,8 @@ class UserController extends AppController
             redirect(url('user/login'));
         }
 
-        $user = User::getAll();
-        $comments = Comment::getUserComment();
+        $user = User::getUserById();
+        $comments = Comment::getCommentsByUsername();
         $this->set(get_defined_vars());
         $this->upload_photo();
     }
@@ -141,7 +141,7 @@ class UserController extends AppController
     public function settings()
     {
         $page = Param::get('page_next', 'settings');
-        $user = User::getAll();
+        $user = User::getUserById();
         $save = Param::get('save');
         $error = $error_input = false;
 
@@ -158,7 +158,7 @@ class UserController extends AppController
                     'cnewpassword' => Param::get('cnewpassword')
                 );
                 $users = new User($params);
-                $users->getId();
+                $users->getById();
                 $name = Param::get('firstname').Param::get('lastname');
 
                 try {
@@ -186,8 +186,8 @@ class UserController extends AppController
             redirect(url('user/login'));
         }
         $user_id = Param::get('user_id');
-        $user = User::getUserInfo($user_id);
-        $comments = Comment::getUserComments($user_id);
+        $user = User::getUserByUserId($user_id);
+        $comments = Comment::getCommentsByUserId($user_id);
 
         $this->set(get_defined_vars());
     }

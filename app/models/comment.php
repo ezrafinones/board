@@ -14,7 +14,7 @@ class Comment extends AppModel
         ),
     );
 
-    public static function getComments($offset, $limit, $id)
+    public static function getCommentsById($offset, $limit, $id)
     {
         $comments = array();
         $db = DB::conn();
@@ -24,7 +24,7 @@ class Comment extends AppModel
         foreach ($rows as $row) {
             $favorites = array();
             $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));
-            $total_favorites = Favorites::countFavorites($row['id']);
+            $total_favorites = Favorites::getCountByCommentId($row['id']);
 
             foreach ($user_favorites as $v) {
                 $favorites[] = $v['user_id'];
@@ -60,7 +60,7 @@ class Comment extends AppModel
         }
     }
 
-    public static function getCommentsInfo($comment_id)
+    public static function getCommentsByCommentId($comment_id)
     {
         $comments = array();
         $db = DB::conn();
@@ -76,7 +76,7 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function getUserComment()
+    public static function getCommentsByUsername()
     {
         $comments = array();
         $db = DB::conn();
@@ -92,7 +92,7 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function getUserComments($user_id)
+    public static function getCommentsByUserId($user_id)
     {
         $comments = array();
         $db = DB::conn();

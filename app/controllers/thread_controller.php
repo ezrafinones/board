@@ -26,7 +26,7 @@ class ThreadController extends AppController
         $per_page = Thread::MAX_PAGE_SIZE;
         $page = Param::get('page', 1);
         $pagination = new SimplePagination($page, $per_page);
-        $comments = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
+        $comments = Comment::getCommentsById($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($comments);
         $total = Comment::count($thread_id);
         $pages = ceil($total / $per_page);
@@ -115,7 +115,7 @@ class ThreadController extends AppController
         $this->render($page);
     }
 
-    public function redirect_delete()
+    public function delete()
     {
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
@@ -123,7 +123,7 @@ class ThreadController extends AppController
         $this->set(get_defined_vars());
     }
 
-    public function delete()
+    public function confirm_delete()
     {
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);

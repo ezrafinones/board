@@ -86,7 +86,7 @@ class User extends AppModel
         Session::set('id', $row['id']);
     }
 
-    public static function getAll()
+    public static function getUserById()
     {
         $user = array();
         $db = DB::conn();
@@ -102,7 +102,7 @@ class User extends AppModel
         return $user;
     }
 
-    public function getId()
+    public function getById()
     {
         $db = DB::conn();
         $id = $db->row("SELECT id FROM user WHERE id = ?", array(Session::get('id')));
@@ -162,7 +162,7 @@ class User extends AppModel
         }
     }
 
-    public static function getUserInfo($user_id)
+    public static function getUserByUserId($user_id)
     {
         $user = array();
         $db = DB::conn();
@@ -181,7 +181,7 @@ class User extends AppModel
     public static function getImage()
     {
         $db = DB::conn();
-        
+
         $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
         if (!$image) {    
             throw new RecordNotFoundException('Image not found');

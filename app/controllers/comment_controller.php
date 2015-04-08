@@ -6,7 +6,7 @@ class CommentController extends AppController
         $comment = new Comment;
         $page = Param::get('page_next', 'edit');
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsInfo($comment_id);
+        $comments = Comment::getCommentsByCommentId($comment_id);
         $error = false;
 
         switch ($page) {
@@ -29,18 +29,18 @@ class CommentController extends AppController
         $this->render($page);
     }
 
-    public function redirect_delete()
+    public function delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsInfo($comment_id);
+        $comments = Comment::getCommentsByCommentId($comment_id);
 
         $this->set(get_defined_vars());
     }
 
-    public function delete()
+    public function confirm_delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsInfo($comment_id);
+        $comments = Comment::getCommentsByCommentId($comment_id);
 
         try {
             Comment::delete($comment_id);
