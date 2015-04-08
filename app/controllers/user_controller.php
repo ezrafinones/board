@@ -5,6 +5,7 @@ class UserController extends AppController
     {
         $page = Param::get('page_next', 'register');
         $default_image = "/image/avatar.png";
+        $error = false;
 
         switch ($page) {
             case 'register':
@@ -19,12 +20,16 @@ class UserController extends AppController
                     'validate_password' => Param::get('validate_password')
                 );
                 $user = new User($params);
+                $name = Param::get('firstname').Param::get('lastname');
 
                 if (!$this->isMatchPassword()) {
                     $user->validation_errors['password']['match'] = true;
                 }
                 try {
                     $user->createImage($default_image);
+                    if(!(preg_match("/^[a-zA-Z0-9]+$/", Param::get('username'))) || !(preg_match("/^[a-zA-Z ]+$/", $name))) {
+                        $error = true;
+                    }
                     $user->register();
                 } catch (ValidationException $e) {
                     $page = 'register';

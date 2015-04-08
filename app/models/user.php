@@ -46,6 +46,7 @@ class User extends AppModel
         $this->validate();
         $db = DB::conn();
         $row = $db->row('SELECT * FROM user WHERE username = ?', array($this->username));
+        
         if ($row) {
             $this->validation_errors['user']['exist'] = true;
         }
@@ -53,7 +54,6 @@ class User extends AppModel
         if ($this->hasError()) {
             throw new ValidationException('invalid input');
         }
-
         $params = array(
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,

@@ -1,5 +1,9 @@
 <h1>User Registration</h1>
 
+<?php if ($error): ?>
+    <h5 class="alert alert-block">Invalid Input</h5>
+<?php endif ?>
+
 <?php if (isset($user)): ?>
     <?php if ($user->hasError()): ?>
         <div class="alert alert-block">
