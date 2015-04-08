@@ -23,6 +23,10 @@ class Thread extends AppModel
         foreach ($rows as $row) {
             $threads[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $threads;
     }
 
@@ -103,6 +107,10 @@ class Thread extends AppModel
         foreach ($rows as $row) {
             $user[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $user;
     }
 
@@ -131,6 +139,10 @@ class Thread extends AppModel
             $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['thread_id']));
             $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($row['thread_id']));
             $threads[] = new self(array_merge($row, $thread_info, $thread_username));
+        }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
         }
         return $threads;
     }

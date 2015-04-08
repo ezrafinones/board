@@ -32,11 +32,11 @@ class Comment extends AppModel
             $row['favorites'] = $favorites; 
             $row['total_favorites'] = $total_favorites;
             $comments[] = new Comment($row);
-        }
+        }  
         return $comments;
     }
 
-    public static function total($thread_id)
+    public static function count($thread_id)
     {
         $db = DB::conn();
         return (int) $db->value("SELECT COUNT(*) FROM comment WHERE thread_id = ?", array($thread_id));
@@ -69,6 +69,10 @@ class Comment extends AppModel
         foreach($rows as $row) {
             $user[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $user;
     }
 
@@ -81,6 +85,10 @@ class Comment extends AppModel
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $comments;
     }
 
@@ -92,6 +100,10 @@ class Comment extends AppModel
 
         foreach ($rows as $row) {
             $comments[] = new self($row);
+        }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
         }
         return $comments;
     }

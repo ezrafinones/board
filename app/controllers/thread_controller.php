@@ -28,7 +28,7 @@ class ThreadController extends AppController
         $pagination = new SimplePagination($page, $per_page);
         $comments = Comment::getComments($pagination->start_index - 1, $pagination->count + 1, $thread_id);
         $pagination->checkLastPage($comments);
-        $total = Comment::total($thread_id);
+        $total = Comment::count($thread_id);
         $pages = ceil($total / $per_page);
         $this->set(get_defined_vars());
     }

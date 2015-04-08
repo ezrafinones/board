@@ -95,6 +95,10 @@ class User extends AppModel
         foreach ($rows as $row) {
             $user[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $user;
     }
 
@@ -167,6 +171,10 @@ class User extends AppModel
         foreach ($rows as $row) {
             $user[] = new self($row);
         }
+
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
         return $user;
     }
 
@@ -174,6 +182,9 @@ class User extends AppModel
     {
         $db = DB::conn();
         $image = $db->row('SELECT image FROM user WHERE id = ?', array(Session::get('id')));
+        if (!$image) {    
+            throw new RecordNotFoundException('Image not found');
+        }
         return $image['image'];
     }
 

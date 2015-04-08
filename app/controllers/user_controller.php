@@ -99,8 +99,12 @@ class UserController extends AppController
 
     public function upload_photo()
     {
-        $image = User::getImage(); 
         $error = false;
+        try {
+            $image = User::getImage(); 
+        } catch (RecordNotFoundException $e) {
+            $error = true;
+        }
         $this->set(get_defined_vars());
  
         if ((!isset($_FILES["image"])) && (!isset($_POST["submit"]))) {
