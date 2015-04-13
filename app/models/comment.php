@@ -2,9 +2,11 @@
 class Comment extends AppModel
 {
     const MIN_LENGTH = 1;
-
     const MAX_USERNAME_LENGTH = 30;
     const MAX_BODY_LENGTH = 254;
+
+    const PAGE_EDIT = 'edit';
+    const PAGE_NEXT = 'page_next';
 
     public $validation = array(
         'body' => array(
@@ -44,7 +46,7 @@ class Comment extends AppModel
 
     public function edit($comment_id)
     {
-        if (!$this->body) {
+        if (!$comment_id) {
             throw new RecordNotFoundException('Record Not Found');
         }
         
@@ -66,12 +68,12 @@ class Comment extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment WHERE id = ?", array($comment_id));
 
-        foreach($rows as $row) {
-            $comments[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach($rows as $row) {
+            $comments[] = new self($row);
         }
         return $comments;
     }
@@ -85,10 +87,6 @@ class Comment extends AppModel
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }
-
-        if (!$rows) {
-            throw new RecordNotFoundException('No Record found');
-        }
         return $comments;
     }
 
@@ -98,12 +96,12 @@ class Comment extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment WHERE user_id = ?", array($user_id));
 
-        foreach ($rows as $row) {
-            $comments[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach ($rows as $row) {
+            $comments[] = new self($row);
         }
         return $comments;
     }

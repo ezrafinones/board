@@ -4,20 +4,20 @@ class CommentController extends AppController
     public function edit()
     {
         $comment = new Comment;
-        $page = Param::get('page_next', 'edit');
+        $page = Param::get(Comment::PAGE_NEXT, Comment::PAGE_EDIT);
         $comment_id = Param::get('id');
         $comments = Comment::getCommentsByCommentId($comment_id);
         $error = false;
 
         switch ($page) {
-            case 'edit':
+            case Comment::PAGE_EDIT:
                 break;
             case 'write':
                 $comment->body = Param::get('body');
                 try {
                     $comment->edit($comment_id);
                 } catch (RecordNotFoundException $e) {
-                        $page = 'edit';
+                        $page = Comment::PAGE_EDIT;
                         $error = true;
                 }
                 break;

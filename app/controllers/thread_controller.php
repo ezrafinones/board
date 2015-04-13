@@ -3,11 +3,12 @@ class ThreadController extends AppController
 {
     public function index()
     {
-        $page = Param::get('page', 1);
+        $min_page = Thread::MIN_PAGE_SIZE;
+        $page = Param::get('page', $min_page);
         $per_page = Thread::MAX_PAGE_SIZE;
         $pagination = new SimplePagination($page, $per_page);
 
-        $threads = Thread::getAll($pagination->start_index - 1, $pagination->count + 1);
+        $threads = Thread::getAll($pagination->start_index - $min_page, $pagination->count + $min_page);
         $pagination->checkLastPage($threads);
         $total = Thread::countAll();
         $pages = ceil($total / $per_page);
@@ -20,13 +21,14 @@ class ThreadController extends AppController
 
     public function view()
     {
+        $min_page = Thread::MIN_PAGE_SIZE;
         $thread = Thread::get(Param::get('thread_id'));
         $thread_id = Param::get('thread_id');
 
         $per_page = Thread::MAX_PAGE_SIZE;
-        $page = Param::get('page', 1);
+        $page = Param::get('page', $min_page);
         $pagination = new SimplePagination($page, $per_page);
-        $comments = Comment::getCommentsById($pagination->start_index - 1, $pagination->count + 1, $thread_id);
+        $comments = Comment::getCommentsById($pagination->start_index - $min_page, $pagination->count + $min_page, $thread_id);
         $pagination->checkLastPage($comments);
         $total = Comment::count($thread_id);
         $pages = ceil($total / $per_page);
@@ -37,17 +39,17 @@ class ThreadController extends AppController
     {
         $thread = Thread::get(Param::get('thread_id'));
         $comment = new Comment;
-        $page = Param::get('page_next');
+        $page = Param::get(Thread::PAGE_NEXT);
             
         switch ($page) {
-            case 'write':
+            case Thread::PAGE_WRITE:
                 break;
-            case 'write_end':
+            case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
                 try{
                     $thread->write($comment, Session::get('username'), Session::get('id'));
                 } catch(ValidationException $e) {
-                    $page = 'write';
+                    $page = Thread::PAGE_WRITE;
                 }
                 break;
             default:
@@ -62,13 +64,13 @@ class ThreadController extends AppController
     {
         $thread = new Thread;
         $comment = new Comment;
-        $page = Param::get('page_next', 'create');
+        $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_CREATE);
         $user_id = Session::get('id');
 
         switch ($page) {
-            case 'create':
+            case Thread::PAGE_CREATE:
                 break;
-            case 'create_end':
+            case Thread::PAGE_CREATE_END:
                 $thread->title = Param::get('title');
                 $thread->user_id = $user_id;
                 $comment->username = Param::get('username');
@@ -76,7 +78,7 @@ class ThreadController extends AppController
                 try {
                     $thread->create($comment, Session::get('username'), Session::get('id'));
                 } catch (ValidationException $e) {
-                    $page = 'create';
+                    $page = Thread::PAGE_CREATE;
                 }
                 break;
             default:
@@ -90,20 +92,20 @@ class ThreadController extends AppController
     public function edit()
     {
         $thread = new Thread;
-        $page = Param::get('page_next', 'edit');
+        $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_EDIT);
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
         $error = false;
 
         switch ($page) {
-            case 'edit':
+            case Thread::PAGE_EDIT:
                 break;
-            case 'write_thread':
+            case Thread::PAGE_WRITE_THREAD:
                 $thread->title = Param::get('title');
                 try {
                     $thread->edit($thread_id);
                 } catch (RecordNotFoundException $e) {
-                        $page = 'edit';
+                        $page = Thread::PAGE_EDIT;
                         $error = true;
                 }
                 break;

@@ -3,8 +3,16 @@ class Thread extends AppModel
 {
     const MIN_TITLE_LENGTH = 1;
     const MAX_TITLE_LENGTH = 30;
-
     const MAX_PAGE_SIZE = 5;
+    const MIN_PAGE_SIZE = 1;
+
+    const PAGE_WRITE = 'write';
+    const PAGE_WRITE_END= 'write_end';
+    const PAGE_CREATE = 'create';
+    const PAGE_CREATE_END = 'create_end';
+    const PAGE_EDIT = 'edit';
+    const PAGE_WRITE_THREAD = 'write_thread';
+    const PAGE_NEXT = 'page_next';
 
     public $validation = array(
        'title' => array(
@@ -20,12 +28,12 @@ class Thread extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
 
-        foreach ($rows as $row) {
-            $threads[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach ($rows as $row) {
+            $threads[] = new self($row);
         }
         return $threads;
     }
@@ -82,7 +90,7 @@ class Thread extends AppModel
 
     public function edit($thread_id)
     {
-        if (!$this->title) {
+        if (!$thread_id) {
             throw new RecordNotFoundException('Record Not Found');
         }
 
@@ -103,12 +111,12 @@ class Thread extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread WHERE id = ?", array($thread_id));
 
-        foreach ($rows as $row) {
-            $user[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach ($rows as $row) {
+            $user[] = new self($row);
         }
         return $user;
     }
@@ -134,14 +142,14 @@ class Thread extends AppModel
 
         $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
                     GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
+        if (!$rows) {
+            throw new RecordNotFoundException('No Record found');
+        }
+
         foreach ($rows as $row) {
             $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['thread_id']));
             $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($row['thread_id']));
             $threads[] = new self(array_merge($row, $thread_info, $thread_username));
-        }
-
-        if (!$rows) {
-            throw new RecordNotFoundException('No Record found');
         }
         return $threads;
     }

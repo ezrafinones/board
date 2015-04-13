@@ -2,13 +2,18 @@
 class User extends AppModel
 {
     const MIN_LENGTH = 1;
-
     const MAX_NAME_LENGTH = 254;
     const MAX_EMAIL_LENGTH = 254;
     const MAX_USERNAME_LENGTH = 20;
     const MAX_PASSWORD_LENGTH = 20;
-
     const MAX_FILE_UPLOAD = 500000;
+
+    const PAGE_NEXT = 'page_next';
+    const PAGE_REGISTER = 'register';
+    const PAGE_WRITE_END = 'write_end';
+    const PAGE_LOGIN = 'login';
+    const PAGE_SETTINGS = 'settings';
+    const PAGE_WRITE_SUCCESS = 'write_success';
 
     public $validation = array(
         'firstname' => array(
@@ -92,12 +97,12 @@ class User extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM user WHERE id = ?", array($id));
 
-        foreach ($rows as $row) {
-            $user[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach ($rows as $row) {
+            $user[] = new self($row);
         }
         return $user;
     }
@@ -168,12 +173,12 @@ class User extends AppModel
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM user WHERE id = ?", array($user_id));
 
-        foreach ($rows as $row) {
-            $user[] = new self($row);
-        }
-
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
+        }
+
+        foreach ($rows as $row) {
+            $user[] = new self($row);
         }
         return $user;
     }

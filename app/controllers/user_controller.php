@@ -3,14 +3,14 @@ class UserController extends AppController
 {
     public function register()
     {
-        $page = Param::get('page_next', 'register');
+        $page = Param::get(User::PAGE_NEXT, User::PAGE_REGISTER);
         $default_image = "/image/avatar.png";
         $error = false;
 
         switch ($page) {
-            case 'register':
+            case User::PAGE_REGISTER:
                 break;
-            case 'write_end':
+            case User::PAGE_WRITE_END:
                 $params = array(
                     'firstname' => Param::get('firstname'),
                     'lastname' => Param::get('lastname'),
@@ -32,7 +32,7 @@ class UserController extends AppController
                     }
                     $user->register();
                 } catch (ValidationException $e) {
-                    $page = 'register';
+                    $page = User::PAGE_REGISTER;
                 }
                 break;
             default:
@@ -45,7 +45,7 @@ class UserController extends AppController
 
     public function login()
     {
-        $page = Param::get('page_next', 'login');
+        $page = Param::get(User::PAGE_NEXT, User::PAGE_LOGIN);
         $error = false;
 
         if (isset($_SESSION['username'])) {
@@ -53,9 +53,9 @@ class UserController extends AppController
         }
 
         switch ($page) {
-            case 'login':
+            case User::PAGE_LOGIN:
                 break;
-            case 'write_end':
+            case User::PAGE_WRITE_END:
                 $params = array(
                     'username' => Param::get('username'),
                     'password' => Param::get('password')
@@ -66,7 +66,7 @@ class UserController extends AppController
                 try {
                     $user->login($login_info);
                 } catch (ValidationException $e) {
-                    $page = 'login';
+                    $page = User::PAGE_LOGIN;
                     $error = true;
                 }
                 if (!$error) {
@@ -140,15 +140,15 @@ class UserController extends AppController
 
     public function settings()
     {
-        $page = Param::get('page_next', 'settings');
+        $page = Param::get(User::PAGE_NEXT, User::PAGE_SETTINGS);
         $user = User::getUserById(Session::get('id'));
         $save = Param::get('save');
         $error = $error_input = false;
 
         switch ($page) {
-            case 'settings':
+            case User::PAGE_SETTINGS:
                 break;
-            case 'write_success':
+            case User::PAGE_WRITE_SUCCESS:
                 $params = array(
                     'firstname' => Param::get('firstname'),
                     'lastname' => Param::get('lastname'),
@@ -168,7 +168,7 @@ class UserController extends AppController
                     $users->updateProfile();
                     $users->updatePassword(Session::get('id'));
                 } catch (ValidationException $e) {
-                        $page = 'settings';
+                        $page = User::PAGE_SETTINGS;
                         $error = true;
                 }
                 break;
