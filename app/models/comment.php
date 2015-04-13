@@ -51,7 +51,7 @@ class Comment extends AppModel
         try {
             $db = DB::conn();
             $db->begin();
-            $db->query('UPDATE comment SET body = ?, created = NOW()
+            $db->query('UPDATE comment SET body = ?, updated = NOW()
                     WHERE id = ?', array($this->body, $comment_id));
             $db->commit();
         } catch (Exception $e) {

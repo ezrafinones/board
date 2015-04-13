@@ -16,6 +16,7 @@ id                      INT UNSIGNED NOT NULL AUTO_INCREMENT,
 user_id                 INT UNSIGNED NOT NULL,
 title                   VARCHAR(255) NOT NULL,
 created             	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated                 TIMESTAMP NULL,
 PRIMARY KEY (id)
 )ENGINE=InnoDB;
                     
@@ -26,6 +27,7 @@ user_id                 INT UNSIGNED NOT NULL,
 username                VARCHAR(255) NOT NULL,
 body                    TEXT NOT NULL,
 created                 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated                 TIMESTAMP NULL,
 PRIMARY KEY (id),
 INDEX (thread_id, created)
 )ENGINE=InnoDB;

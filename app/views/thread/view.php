@@ -5,9 +5,15 @@
         <div class="meta" style="font-size:16px">
             <a href="/user/user_profile?user_id=<?php echo $v->user_id ?>"><b><?php check_string($v->username) ?></b></a>
         </div>
-        <div class="meta" style="font-size:12px; color:#5C5C5C">
-            <i><?php check_string($v->created) ?></i>
-        </div>
+        <?php if ($v->updated === NULL): ?>
+            <div class="meta" style="font-size:12px; color:#5C5C5C">
+                <i><?php check_string($v->created) ?></i>
+            </div>
+        <?php else: ?>
+            <div class="meta" style="font-size:12px; color:#5C5C5C">
+                <i>updated <?php check_string($v->updated) ?></i>
+            </div>
+        <?php endif ?>
         <div class="well" style="min-height:60px; border-radius:8px; border: 2px dashed #5C5C5C; background-color:#D9D9D9; color:#008AE6">
             <?php echo readable_text($v->body) ?>
         </div>

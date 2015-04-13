@@ -3,6 +3,15 @@
 <ul style='list-style:none;'>
     <?php foreach ($threads as $v): ?>
     <li>
+        <?php if ($v->updated === NULL): ?>
+            <div class="meta" style="font-size:12px; color:#5C5C5C">
+                <i><?php check_string($v->created) ?></i>
+            </div>
+        <?php else: ?>
+            <div class="meta" style="font-size:12px; color:#5C5C5C">
+                <i>updated <?php check_string($v->updated) ?></i>
+            </div>
+        <?php endif ?>
         <div class="well" style="background-color:white; margin-bottom:7px;">
             <a href="<?php check_string(url('thread/view', array('thread_id' => $v->id))) ?>">
             <div class="container" style="font-size:18px">
