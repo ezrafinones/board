@@ -87,8 +87,7 @@ class User extends AppModel
         if (!$row) {
             throw new RecordNotFoundException('No Record Found');
         }
-        Session::set('username', $this->username);
-        Session::set('id', $row['id']);
+        return $row['id'];
     }
 
     public static function getUserById($id)

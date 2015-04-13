@@ -51,20 +51,11 @@ class Thread extends AppModel
 
     public function write($comment, $username, $id)
     {
-        if (!$comment->validate()) {
-           throw new ValidationException('invalid comment');
-        }
         Comment::write($this->id, $comment, $username, $id);
     }   
 
     public function create($comment, $username, $id)
     {
-        $this->validate();
-        $comment->validate();
-        if ($this->hasError() || $comment->hasError()) {
-           throw new ValidationException('invalid thread or comment');
-        }
-
         $db = DB::conn();
         $db->begin();
 
@@ -139,7 +130,7 @@ class Thread extends AppModel
         $threads = array();
         $rows = Comment::getComments();
         $db = DB::conn();
-        
+
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
         }

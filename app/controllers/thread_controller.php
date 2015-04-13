@@ -46,10 +46,11 @@ class ThreadController extends AppController
                 break;
             case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
-                try {
+                if(!$comment->validate())
+                {
+                    $page = Thread::PAGE_WRITE;  
+                } else {
                     $thread->write($comment, Session::get('username'), Session::get('id'));
-                } catch(ValidationException $e) {
-                    $page = Thread::PAGE_WRITE;
                 }
                 break;
             default:
@@ -75,10 +76,14 @@ class ThreadController extends AppController
                 $thread->user_id = $user_id;
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
-                try {
+
+                $thread->validate();
+                $comment->validate();
+                if($thread->hasError() || $comment->hasError())
+                {
+                    $page = Thread::PAGE_CREATE;  
+                } else {
                     $thread->create($comment, Session::get('username'), Session::get('id'));
-                } catch (ValidationException $e) {
-                    $page = Thread::PAGE_CREATE;
                 }
                 break;
             default:

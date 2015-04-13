@@ -65,6 +65,9 @@ class UserController extends AppController
 
                 try {
                     $user->login($login_info);
+                    $id = $user->login($login_info);
+                    Session::set('username', Param::get('username'));
+                    Session::set('id', $id);
                 } catch (ValidationException $e) {
                     $page = User::PAGE_LOGIN;
                     $error = true;
