@@ -135,7 +135,7 @@ class Comment extends AppModel
         $comments = array();
         $rows = Favorites::getFavoritesOrderByCount();
         $db = DB::conn();
-        
+
         foreach ($rows as $row) {
             $comment_info = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
             $comments[] = new self(array_merge($row, $comment_info));
@@ -153,7 +153,7 @@ class Comment extends AppModel
     public static function getUsernameByThreadId($thread_id)
     {
         $db = DB::conn();
-        $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($thread_id));
+        $thread_username = $db->row('SELECT username FROM comment WHERE thread_id = ?', array($thread_id));
         return $thread_username;
     }
 

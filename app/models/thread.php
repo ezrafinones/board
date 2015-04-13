@@ -137,7 +137,7 @@ class Thread extends AppModel
 
         foreach ($rows as $row) {
             $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['thread_id']));
-            $username = (array) Comment::getUsernameByThreadId($row['thread_id']);
+            $username = Comment::getUsernameByThreadId($row['thread_id']);
             $threads[] = new self(array_merge($row, $thread_info, $username));
         }
         return $threads;

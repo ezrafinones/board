@@ -3,7 +3,7 @@ class CommentController extends AppController
 {
     public function edit()
     {
-        $comment = new Comment;
+        $comment = new Comment();
         $page = Param::get(Comment::PAGE_NEXT, Comment::PAGE_EDIT);
         $comment_id = Param::get('id');
         $comments = Comment::getCommentsByCommentId($comment_id);

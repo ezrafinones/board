@@ -38,7 +38,7 @@ class ThreadController extends AppController
     public function write()
     {
         $thread = Thread::get(Param::get('thread_id'));
-        $comment = new Comment;
+        $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT);
             
         switch ($page) {
@@ -46,8 +46,7 @@ class ThreadController extends AppController
                 break;
             case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
-                if(!$comment->validate())
-                {
+                if (!$comment->validate()) {
                     $page = Thread::PAGE_WRITE;  
                 } else {
                     $thread->write($comment, Session::get('username'), Session::get('id'));
@@ -63,8 +62,8 @@ class ThreadController extends AppController
 
     public function create()
     {
-        $thread = new Thread;
-        $comment = new Comment;
+        $thread = new Thread();
+        $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_CREATE);
         $user_id = Session::get('id');
 
@@ -79,8 +78,7 @@ class ThreadController extends AppController
 
                 $thread->validate();
                 $comment->validate();
-                if($thread->hasError() || $comment->hasError())
-                {
+                if ($thread->hasError() || $comment->hasError()) {
                     $page = Thread::PAGE_CREATE;  
                 } else {
                     $thread->create($comment, Session::get('username'), Session::get('id'));
@@ -96,7 +94,7 @@ class ThreadController extends AppController
 
     public function edit()
     {
-        $thread = new Thread;
+        $thread = new Thread();
         $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_EDIT);
         $thread_id = Param::get('id');
         $threads = Thread::getThread($thread_id);
