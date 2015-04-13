@@ -25,7 +25,7 @@ class Comment extends AppModel
 
         foreach ($rows as $row) {
             $favorites = array();
-            $user_favorites = $db->rows("SELECT * FROM favorites WHERE comment_id = ?", array($row['id']));
+            $user_favorites = Favorites::getFavoritesByCommentId($row['id']);
             $total_favorites = Favorites::getCountByCommentId($row['id']);
 
             foreach ($user_favorites as $v) {
@@ -111,6 +111,20 @@ class Comment extends AppModel
         $db = DB::conn();
         try {
             $db->query('DELETE FROM comment WHERE id = ?', array($comment_id));
+            Favorites::deleteByCommentId($comment_id);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public static function deleteByThreadId($thread_id)
+    {
+        $db = DB::conn();
+        try {
+            $rows = $db->rows('SELECT * FROM comment WHERE thread_id = ?', array($thread_id));
+            foreach ($rows as $comments) {
+                self::delete($comments['id']);
+            }      
         } catch (Exception $e) {
             throw $e;
         }
@@ -119,13 +133,36 @@ class Comment extends AppModel
     public static function getMostFavorites()
     {
         $comments = array();
+        $rows = Favorites::getFavoritesOrderByCount();
         $db = DB::conn();
-        $rows = $db->rows("SELECT id, comment_id, user_id, COUNT(comment_id) AS total_favorites
-                    FROM favorites GROUP BY comment_id ORDER BY total_favorites DESC");
+        
         foreach ($rows as $row) {
             $comment_info = $db->row('SELECT * FROM comment WHERE id = ?', array($row['comment_id']));
             $comments[] = new self(array_merge($row, $comment_info));
         }
         return $comments;
+    }
+
+    public static function write($thread_id, $comment, $username, $id)
+    {
+        $db = DB::conn();
+        $db->query('INSERT INTO comment SET thread_id = ?, username = ?, body = ?, user_id = ?',
+                array($thread_id, $username, $comment->body, $id));
+    }
+
+    public static function getUsernameByThreadId($thread_id)
+    {
+        $db = DB::conn();
+        $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($thread_id));
+        return $thread_username;
+    }
+
+    public static function getComments()
+    {
+        $db = DB::conn();
+
+        $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
+                    GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
+        return $rows;
     }
 }

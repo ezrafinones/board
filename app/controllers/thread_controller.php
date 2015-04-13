@@ -46,7 +46,7 @@ class ThreadController extends AppController
                 break;
             case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
-                try{
+                try {
                     $thread->write($comment, Session::get('username'), Session::get('id'));
                 } catch(ValidationException $e) {
                     $page = Thread::PAGE_WRITE;

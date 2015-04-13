@@ -12,7 +12,7 @@ class CommentController extends AppController
         switch ($page) {
             case Comment::PAGE_EDIT:
                 break;
-            case 'write':
+            case PAGE_WRITE:
                 $comment->body = Param::get('body');
                 try {
                     $comment->edit($comment_id);

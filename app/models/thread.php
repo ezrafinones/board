@@ -54,11 +54,8 @@ class Thread extends AppModel
         if (!$comment->validate()) {
            throw new ValidationException('invalid comment');
         }
-
-        $db = DB::conn();
-        $db->query('INSERT INTO comment SET thread_id = ?, username = ?, body = ?, user_id = ?',
-                array($this->id, $username, $comment->body, $id));
-    }
+        Comment::write($this->id, $comment, $username, $id);
+    }   
 
     public function create($comment, $username, $id)
     {
@@ -123,14 +120,16 @@ class Thread extends AppModel
 
     public static function delete($thread_id)
     {
+        Comment::deleteByThreadId($thread_id);
+        Thread::deleteById($thread_id); 
+    }
+
+    public static function deleteById($thread_id) 
+    {
         $db = DB::conn();
         try {
-            $db->begin();
             $db->query('DELETE FROM thread WHERE id = ?', array($thread_id));
-            $db->query('DELETE FROM comment WHERE thread_id = ?', array($thread_id));
-            $db->commit();
         } catch (Exception $e) {
-            $db->rollback();
             throw $e;
         }
     }
@@ -138,18 +137,17 @@ class Thread extends AppModel
     public static function getMostFavorites()
     {
         $threads = array();
+        $rows = Comment::getComments();
         $db = DB::conn();
-
-        $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
-                    GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
+        
         if (!$rows) {
             throw new RecordNotFoundException('No Record found');
         }
 
         foreach ($rows as $row) {
             $thread_info = $db->row('SELECT * FROM thread WHERE id = ?', array($row['thread_id']));
-            $thread_username = $db->row('SELECT username FROM comment WHERE id = ?', array($row['thread_id']));
-            $threads[] = new self(array_merge($row, $thread_info, $thread_username));
+            $username = (array) Comment::getUsernameByThreadId($row['thread_id']);
+            $threads[] = new self(array_merge($row, $thread_info, $username));
         }
         return $threads;
     }
