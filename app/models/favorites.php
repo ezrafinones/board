@@ -1,20 +1,20 @@
 <?php
 class Favorites extends AppModel
 {
-    public static function insertFavorites($user_id, $comment_id) 
+    public static function insert($user_id, $comment_id) 
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->insert('favorites', array('user_id' => $user_id, 'comment_id' => $comment_id));
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public static function deleteFavorites($user_id, $comment_id) 
+    public static function delete($user_id, $comment_id) 
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->query('DELETE FROM favorites WHERE user_id = ? AND comment_id = ?', array($user_id, $comment_id));
         } catch (Exception $e) {
             throw $e;
@@ -29,8 +29,8 @@ class Favorites extends AppModel
 
     public static function deleteByCommentId($comment_id) 
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->query('DELETE FROM favorites WHERE comment_id = ?', array($comment_id));
         } catch (Exception $e) {
             throw $e;

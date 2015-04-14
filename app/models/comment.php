@@ -17,7 +17,7 @@ class Comment extends AppModel
         ),
     );
 
-    public static function getCommentsById($id, $limit, $offset)
+    public static function getFavoriteCommentsById($id, $limit, $offset)
     {
         $comments = array();
         $offset = (int)$offset;
@@ -38,7 +38,7 @@ class Comment extends AppModel
             $row['favorites'] = $favorites; 
             $row['total_favorites'] = $total_favorites;
             $comments[] = new Comment($row);
-        }  
+        }
         return $comments;
     }
 
@@ -53,7 +53,7 @@ class Comment extends AppModel
         if (!$comment_id) {
             throw new RecordNotFoundException('Record Not Found');
         }
-        
+
         try {
             $db = DB::conn();
             $db->query('UPDATE comment SET body = ?, updated = NOW() WHERE id = ?', array($this->body, $comment_id));
@@ -62,7 +62,7 @@ class Comment extends AppModel
         }
     }
 
-    public static function getCommentsByCommentId($comment_id)
+    public static function getById($comment_id)
     {
         $comments = array();
         $db = DB::conn();
@@ -78,7 +78,7 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function getCommentsByUsername($username)
+    public static function getByUsername($username)
     {
         $comments = array();
         $db = DB::conn();
@@ -90,7 +90,7 @@ class Comment extends AppModel
         return $comments;
     }
 
-    public static function getCommentsByUserId($user_id)
+    public static function getByUserId($user_id)
     {
         $comments = array();
         $db = DB::conn();
@@ -157,7 +157,7 @@ class Comment extends AppModel
         return $thread_username;
     }
 
-    public static function getComments()
+    public static function getCount()
     {
         $db = DB::conn();
         $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment

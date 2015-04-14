@@ -6,7 +6,7 @@ class CommentController extends AppController
         $comment = new Comment();
         $page = Param::get(Comment::PAGE_NEXT, Comment::PAGE_EDIT);
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsByCommentId($comment_id);
+        $comments = Comment::getById($comment_id);
         $error = false;
 
         switch ($page) {
@@ -17,8 +17,8 @@ class CommentController extends AppController
                 try {
                     $comment->edit($comment_id);
                 } catch (RecordNotFoundException $e) {
-                        $page = Comment::PAGE_EDIT;
-                        $error = true;
+                    $page = Comment::PAGE_EDIT;
+                    $error = true;
                 }
                 break;
             default:
@@ -32,7 +32,7 @@ class CommentController extends AppController
     public function delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsByCommentId($comment_id);
+        $comments = Comment::getById($comment_id);
 
         $this->set(get_defined_vars());
     }
@@ -40,7 +40,7 @@ class CommentController extends AppController
     public function confirm_delete()
     {
         $comment_id = Param::get('id');
-        $comments = Comment::getCommentsByCommentId($comment_id);
+        $comments = Comment::getById($comment_id);
 
         try {
             Comment::delete($comment_id);
@@ -58,9 +58,9 @@ class CommentController extends AppController
         $user_id = Session::get('id');
 
         if ($action == true) {
-            Favorites::insertFavorites($user_id, $comment_id, $action);
+            Favorites::insert($user_id, $comment_id, $action);
         } else {
-            Favorites::deleteFavorites($user_id, $comment_id, $action);
+            Favorites::delete($user_id, $comment_id, $action);
         }
         redirect(url('thread/view', array('thread_id' => $thread_id)));
     }

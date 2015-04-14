@@ -33,7 +33,7 @@ class ThreadController extends AppController
         $per_page = Thread::MAX_PAGE_SIZE;
         $page = Param::get('page', $min_page);
         $pagination = new SimplePagination($page, $per_page);
-        $comments = Comment::getCommentsById($thread_id, $pagination->count + $min_page, $pagination->start_index - $min_page);
+        $comments = Comment::getFavoriteCommentsById($thread_id, $pagination->count + $min_page, $pagination->start_index - $min_page);
         $pagination->checkLastPage($comments);
         $total = Comment::count($thread_id);
         $pages = ceil($total / $per_page);
@@ -71,7 +71,6 @@ class ThreadController extends AppController
         $thread = new Thread();
         $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_CREATE);
-        $user_id = Session::get('id');
 
         switch ($page) {
             case Thread::PAGE_CREATE:
@@ -79,7 +78,7 @@ class ThreadController extends AppController
             case Thread::PAGE_CREATE_END:
                 $thread->title = Param::get('title');
                 $thread->id = Param::get('id');
-                $thread->user_id = $user_id;
+                $thread->user_id = Session::get('id');
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
 
@@ -104,7 +103,7 @@ class ThreadController extends AppController
         $thread = new Thread();
         $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_EDIT);
         $thread_id = Param::get('id');
-        $threads = Thread::getThread($thread_id);
+        $threads = Thread::getById($thread_id);
         $error = false;
 
         switch ($page) {
@@ -130,7 +129,7 @@ class ThreadController extends AppController
     public function delete()
     {
         $thread_id = Param::get('id');
-        $threads = Thread::getThread($thread_id);
+        $threads = Thread::getById($thread_id);
 
         $this->set(get_defined_vars());
     }
@@ -138,7 +137,7 @@ class ThreadController extends AppController
     public function confirm_delete()
     {
         $thread_id = Param::get('id');
-        $threads = Thread::getThread($thread_id);
+        $threads = Thread::getById($thread_id);
 
         try {
             Comment::deleteByThreadId($thread_id);

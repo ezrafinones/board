@@ -95,8 +95,8 @@ class UserController extends AppController
             redirect(url('user/login'));
         }
 
-        $user = User::getUserById(Session::get('id'));
-        $comments = Comment::getCommentsByUsername(Session::get('username'));
+        $user = User::getRowsById(Session::get('id'));
+        $comments = Comment::getByUsername(Session::get('username'));
         $this->set(get_defined_vars());
         $this->upload_photo();
     }
@@ -145,7 +145,7 @@ class UserController extends AppController
     public function settings()
     {
         $page = Param::get(User::PAGE_NEXT, User::PAGE_SETTINGS);
-        $user = User::getUserById(Session::get('id'));
+        $user = User::getRowsById(Session::get('id'));
         $save = Param::get('save');
         $error = $error_input = false;
 
@@ -159,14 +159,14 @@ class UserController extends AppController
                     'email' => Param::get('email'),
                     'password' => Param::get('password'),
                     'newpassword' => Param::get('newpassword'),
-                    'cnewpassword' => Param::get('cnewpassword')
+                    'confirm_new_password' => Param::get('confirm_new_password')
                 );
                 $users = new User($params);
                 $users->getById(Session::get('id'));
-                $name = Param::get('firstname').Param::get('lastname');
+                $name = $params['firstname'].$params['lastname'];
 
                 try {
-                    if(!(preg_match("/^[a-zA-Z ]+$/", $name))) {
+                    if(!(preg_match("/^[a-zA-Z0-9]+$/", $name))) {
                         $error_input = true;
                     }
                     $users->updateProfile();
@@ -190,8 +190,8 @@ class UserController extends AppController
             redirect(url('user/login'));
         }
         $user_id = Param::get('user_id');
-        $user = User::getUserByUserId($user_id);
-        $comments = Comment::getCommentsByUserId($user_id);
+        $user = User::getByUserId($user_id);
+        $comments = Comment::getByUserId($user_id);
 
         $this->set(get_defined_vars());
         $this->upload_photo();

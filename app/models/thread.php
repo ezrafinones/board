@@ -62,10 +62,10 @@ class Thread extends AppModel
         try {
             $db = DB::conn();
             $db->begin();
-
             $db->insert('thread', $params);
+
             $this->id = $db->lastInsertId(); 
-            Comment::write($id, $comment, $username, $this->id);
+            Comment::write($this->id, $comment, $username, $id);
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
@@ -94,7 +94,7 @@ class Thread extends AppModel
         }
     }
 
-    public static function getThread($thread_id)
+    public static function getById($thread_id)
     {
         $user = array();
         $db = DB::conn();
@@ -110,8 +110,8 @@ class Thread extends AppModel
         return $user;
     }
 
-    public static function deleteById($thread_id) 
-    {      
+    public static function deleteById($thread_id)
+    {
         try {
             $db = DB::conn();
             $db->query('DELETE FROM thread WHERE id = ?', array($thread_id));
@@ -123,7 +123,7 @@ class Thread extends AppModel
     public static function getMostFavorites()
     {
         $threads = array();
-        $rows = Comment::getComments();
+        $rows = Comment::getCount();
         $db = DB::conn();
 
         if (!$rows) {

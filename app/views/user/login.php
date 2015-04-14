@@ -13,7 +13,7 @@
 
             <?php if (!empty($user->validation_errors['username']['length'])): ?>
                 <div><em>First Name</em> must be
-                between                
+                between
                     <?php check_string($user->validation['username']['length'][1]) ?> and
                     <?php check_string($user->validation['username']['length'][2]) ?> characters in length.
                 </div>
@@ -21,7 +21,7 @@
 
             <?php if (!empty($user->validation_errors['password']['length'])): ?>
                 <div><em>Last Name</em> must be
-                    between 
+                    between
                     <?php check_string($user->validation['password']['length'][1]) ?> and
                     <?php check_string($user->validation['password']['length'][2]) ?> characters in length.
                 </div>

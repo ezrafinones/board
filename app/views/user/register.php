@@ -14,7 +14,7 @@
             <?php endif ?>
             <?php if (!empty($user->validation_errors['firstname']['length'])): ?>
                 <div><em>First Name</em> must be
-                between                
+                between
                     <?php check_string($user->validation['firstname']['length'][1]) ?> and
                     <?php check_string($user->validation['firstname']['length'][2]) ?> characters in length.
                 </div>

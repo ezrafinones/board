@@ -87,7 +87,7 @@ class User extends AppModel
         return $row['id'];
     }
 
-    public static function getUserById($id)
+    public static function getRowsById($id)
     {
         $user = array();
         $db = DB::conn();
@@ -113,12 +113,12 @@ class User extends AppModel
     public function updateProfile()
     {
         $params = array();
-        $temp = array('firstname' => $this->firstname,
+        $profile = array('firstname' => $this->firstname,
                     'lastname' => $this->lastname,
                     'email' => $this->email,
         );
 
-        foreach ($temp as $k => $v) {
+        foreach ($profile as $k => $v) {
             if (!empty($v)) {
                 $params[$k] = $v;
             }
@@ -136,14 +136,14 @@ class User extends AppModel
 
     public function updatePassword($id)
     {
-        if (!empty($this->newpassword) && !empty($this->cnewpassword)) {
+        if (!empty($this->newpassword) && !empty($this->confirm_new_password)) {
             $params = array('password' => md5($this->newpassword),
-                        'validate_password' => md5($this->cnewpassword),
+                        'validate_password' => md5($this->confirm_new_password),
             );
             $db = DB::conn();
             $row = $db->row('SELECT password FROM user WHERE id = ?', array($id));
 
-            if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {
+            if ($row['password'] === md5($this->password) && $this->newpassword === $this->confirm_new_password) {
                  try {
                     $db->update('user', $params, array('id' => $this->id));
                 } catch(Exception $e) {
@@ -157,7 +157,7 @@ class User extends AppModel
         }
     }
 
-    public static function getUserByUserId($user_id)
+    public static function getByUserId($user_id)
     {
         $user = array();
         $db = DB::conn();

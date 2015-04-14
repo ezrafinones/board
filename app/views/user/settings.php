@@ -40,7 +40,7 @@
         <input type="password" class="span2" name="newpassword" placeholder="New Password" value="<?php check_string(Param::get('password')) ?>">
         <br>
         <li><?php echo "Confirm Password: "?></li>
-        <input type="password" class="span2" name="cnewpassword" placeholder="Re-type Password" value="<?php check_string(Param::get('valdate_password')) ?>">
+        <input type="password" class="span2" name="confirm_new_password" placeholder="Re-type Password" value="<?php check_string(Param::get('valdate_password')) ?>">
             <br>
     </ul>
     <input type="hidden" name="user_id" value="<?php check_string($user->id) ?>">
