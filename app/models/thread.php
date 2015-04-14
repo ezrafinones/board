@@ -27,7 +27,7 @@ class Thread extends AppModel
         $threads = array();
         $offset = (int)$offset;
         $limit = (int)$limit;
-        
+
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
 
@@ -52,11 +52,6 @@ class Thread extends AppModel
         return new self($row);
     }
 
-    public function write($comment, $username, $id)
-    {
-        Comment::write($this->id, $comment, $username, $id);
-    }   
-
     public function create($comment, $username, $id)
     {
         $db = DB::conn();
@@ -68,8 +63,8 @@ class Thread extends AppModel
         );
 
         $db->insert('thread', $params);
-        $this->id = $db->lastInsertId();
-        $this->write($comment, $username, $id);
+        $id = $db->lastInsertId(); 
+        Comment::write($id, $comment, $username, $id);
         $db->commit();
     }
 
@@ -110,12 +105,6 @@ class Thread extends AppModel
             $user[] = new self($row);
         }
         return $user;
-    }
-
-    public static function delete($thread_id)
-    {
-        Comment::deleteByThreadId($thread_id);
-        Thread::deleteById($thread_id); 
     }
 
     public static function deleteById($thread_id) 

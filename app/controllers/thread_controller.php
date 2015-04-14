@@ -38,6 +38,7 @@ class ThreadController extends AppController
     public function write()
     {
         $thread = Thread::get(Param::get('thread_id'));
+        $thread_id = Param::get('thread_id');
         $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT);
             
@@ -47,9 +48,9 @@ class ThreadController extends AppController
             case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
                 if (!$comment->validate()) {
-                    $page = Thread::PAGE_WRITE;  
+                    $page = Thread::PAGE_WRITE;
                 } else {
-                    $thread->write($comment, Session::get('username'), Session::get('id'));
+                    Comment::write($thread_id, $comment, Session::get('username'), Session::get('id'));
                 }
                 break;
             default:
@@ -134,7 +135,8 @@ class ThreadController extends AppController
         $threads = Thread::getThread($thread_id);
 
         try {
-            Thread::delete($thread_id);
+            Comment::deleteByThreadId($thread_id);
+            Thread::deleteById($thread_id); 
         } catch (ValidationException $e) {
             redirect(url('thread/index', array('thread_id' => $thread_id)));
         }

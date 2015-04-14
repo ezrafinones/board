@@ -7,6 +7,7 @@ class Comment extends AppModel
 
     const PAGE_EDIT = 'edit';
     const PAGE_NEXT = 'page_next';
+    const PAGE_EDIT_END = 'edit_end';
 
     public $validation = array(
         'body' => array(

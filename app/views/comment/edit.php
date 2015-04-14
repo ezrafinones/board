@@ -12,6 +12,6 @@
             <br>
         <?php endforeach ?>
     </ul>
-    <input type="hidden" name="page_next" value="write">
+    <input type="hidden" name="page_next" value="edit_end">
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
