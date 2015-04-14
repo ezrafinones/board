@@ -25,6 +25,9 @@ class Thread extends AppModel
     public static function getAll($offset, $limit)
     {
         $threads = array();
+        $offset = (int)$offset;
+        $limit = (int)$limit;
+        
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM thread LIMIT {$offset}, {$limit}");
 

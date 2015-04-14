@@ -27,7 +27,11 @@ class Favorites extends AppModel
     public static function deleteFavorites($user_id, $comment_id) 
     {
         $db = DB::conn();
-        $db->query('DELETE FROM favorites WHERE user_id = ? AND comment_id = ?', array($user_id, $comment_id));
+        try {
+            $db->query('DELETE FROM favorites WHERE user_id = ? AND comment_id = ?', array($user_id, $comment_id));
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     public static function getCountByCommentId($comment_id)

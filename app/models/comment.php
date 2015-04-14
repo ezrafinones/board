@@ -16,9 +16,12 @@ class Comment extends AppModel
         ),
     );
 
-    public static function getCommentsById($offset, $limit, $id)
+    public static function getCommentsById($id, $limit, $offset)
     {
         $comments = array();
+        $offset = (int)$offset;
+        $limit = (int)$limit;
+
         $db = DB::conn();
         $rows = $db->rows("SELECT * FROM comment 
                         WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
