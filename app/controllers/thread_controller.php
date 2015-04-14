@@ -3,6 +3,10 @@ class ThreadController extends AppController
 {
     public function index()
     {
+        if (!Session::get('username')) {
+            redirect(url('user/login'));
+        }
+
         $min_page = Thread::MIN_PAGE_SIZE;
         $page = Param::get('page', $min_page);
         $per_page = Thread::MAX_PAGE_SIZE;
@@ -14,13 +18,14 @@ class ThreadController extends AppController
         $pages = ceil($total / $per_page);
 
         $this->set(get_defined_vars());
-        if (!Session::get('username')) {
-            redirect(url('user/login'));
-        }
     }
 
     public function view()
     {
+        if (!Session::get('username')) {
+            redirect(url('user/login'));
+        }
+
         $min_page = Thread::MIN_PAGE_SIZE;
         $thread = Thread::get(Param::get('thread_id'));
         $thread_id = Param::get('thread_id');
@@ -73,6 +78,7 @@ class ThreadController extends AppController
                 break;
             case Thread::PAGE_CREATE_END:
                 $thread->title = Param::get('title');
+                $thread->id = Param::get('id');
                 $thread->user_id = $user_id;
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
@@ -80,7 +86,7 @@ class ThreadController extends AppController
                 $thread->validate();
                 $comment->validate();
                 if ($thread->hasError() || $comment->hasError()) {
-                    $page = Thread::PAGE_CREATE;  
+                    $page = Thread::PAGE_CREATE;
                 } else {
                     $thread->create($comment, Session::get('username'), Session::get('id'));
                 }
@@ -136,7 +142,7 @@ class ThreadController extends AppController
 
         try {
             Comment::deleteByThreadId($thread_id);
-            Thread::deleteById($thread_id); 
+            Thread::deleteById($thread_id);
         } catch (ValidationException $e) {
             redirect(url('thread/index', array('thread_id' => $thread_id)));
         }

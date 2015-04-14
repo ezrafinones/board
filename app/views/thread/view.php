@@ -55,6 +55,9 @@
     </ul>
 <?php endif ?>
 
+<br>
+<a type="submit" class="btn-large btn-primary" href="<?php check_string(url('thread/index')) ?>" >Back</a>
+
 <hr>
 <form class="well" method="post" action="<?php check_string(url('thread/write')) ?>">
     <input type="hidden" class="span2" name="<?php Session::get('username')?>" value="<?php check_string(Param::get('username')) ?>">

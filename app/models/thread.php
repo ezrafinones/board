@@ -54,18 +54,23 @@ class Thread extends AppModel
 
     public function create($comment, $username, $id)
     {
-        $db = DB::conn();
-        $db->begin();
-
         $params = array(
             'title' => $this->title,
             'user_id' => $this->user_id
         );
 
-        $db->insert('thread', $params);
-        $id = $db->lastInsertId(); 
-        Comment::write($id, $comment, $username, $id);
-        $db->commit();
+        try {
+            $db = DB::conn();
+            $db->begin();
+
+            $db->insert('thread', $params);
+            $this->id = $db->lastInsertId(); 
+            Comment::write($id, $comment, $username, $this->id);
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
     }
 
     public static function countAll()
@@ -82,7 +87,8 @@ class Thread extends AppModel
 
         try {
             $db = DB::conn();
-            $db->query('UPDATE thread SET title = ?, updated = NOW() WHERE id = ?', array($this->title, $thread_id));
+            $db->query('UPDATE thread SET title = ?, updated = NOW() 
+                WHERE id = ?', array($this->title, $thread_id));
         } catch (Exception $e) {
             throw $e;
         }
@@ -105,9 +111,9 @@ class Thread extends AppModel
     }
 
     public static function deleteById($thread_id) 
-    {
-        $db = DB::conn();
+    {      
         try {
+            $db = DB::conn();
             $db->query('DELETE FROM thread WHERE id = ?', array($thread_id));
         } catch (Exception $e) {
             throw $e;

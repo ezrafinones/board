@@ -35,4 +35,7 @@
     <br />
     <input type="hidden" name="page_next" value="create_end">
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a type="submit" class="btn btn-inverse" href="<?php check_string(url('thread/index')) ?>" >Back</a>
 </form>
+
+

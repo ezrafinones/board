@@ -24,7 +24,7 @@ class Comment extends AppModel
         $limit = (int)$limit;
 
         $db = DB::conn();
-        $rows = $db->rows("SELECT * FROM comment 
+        $rows = $db->rows("SELECT * FROM comment
                         WHERE thread_id = ? ORDER BY created ASC LIMIT {$offset}, {$limit}", array($id));
 
         foreach ($rows as $row) {
@@ -56,8 +56,7 @@ class Comment extends AppModel
         
         try {
             $db = DB::conn();
-            $db->query('UPDATE comment SET body = ?, updated = NOW()
-                    WHERE id = ?', array($this->body, $comment_id));
+            $db->query('UPDATE comment SET body = ?, updated = NOW() WHERE id = ?', array($this->body, $comment_id));
         } catch (Exception $e) {
             throw $e;
         }
@@ -109,8 +108,8 @@ class Comment extends AppModel
 
     public static function delete($comment_id)
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->query('DELETE FROM comment WHERE id = ?', array($comment_id));
             Favorites::deleteByCommentId($comment_id);
         } catch (Exception $e) {
@@ -120,8 +119,8 @@ class Comment extends AppModel
 
     public static function deleteByThreadId($thread_id)
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $rows = $db->rows('SELECT * FROM comment WHERE thread_id = ?', array($thread_id));
             foreach ($rows as $comments) {
                 self::delete($comments['id']);
@@ -161,7 +160,7 @@ class Comment extends AppModel
     public static function getComments()
     {
         $db = DB::conn();
-        $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
+        $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment
                     GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
         return $rows;
     }

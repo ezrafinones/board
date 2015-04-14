@@ -178,7 +178,7 @@ class User extends AppModel
         $db = DB::conn();
 
         $image = $db->row('SELECT image FROM user WHERE id = ?', array($id));
-        if (!$image) {    
+        if (!$image) {
             throw new RecordNotFoundException('Image not found');
         }
         return $image['image'];
@@ -186,8 +186,8 @@ class User extends AppModel
 
     public function createImage($default_image, $id)
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->update('user', array('image' => $default_image), array('id' => $id));
         } catch (Exception $e) {
             throw $e;
@@ -196,8 +196,8 @@ class User extends AppModel
 
     public static function uploadImage($target_file, $id)
     {
-        $db = DB::conn();
         try {
+            $db = DB::conn();
             $db->update('user', array('image' => $target_file), array('id' => $id));
         } catch (Exception $e) {
             throw $e;

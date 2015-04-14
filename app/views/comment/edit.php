@@ -14,4 +14,5 @@
     </ul>
     <input type="hidden" name="page_next" value="edit_end">
     <button type="submit" class="btn btn-primary">Edit</button>
+     <a type="submit" class="btn btn-inverse" href="<?php check_string(url('thread/view', array('thread_id' => $thread->id))) ?>" >Back</a>
 </form>

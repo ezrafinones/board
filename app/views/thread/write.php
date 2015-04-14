@@ -21,12 +21,14 @@
 <?php endif ?>
 
 <form class="well" method="post" action="<?php check_string(url('thread/write')) ?>">
-    <label>Your name</label>
-        <input type="text" class="span2" name="username" value="<?php check_string(Param::get('username')) ?>">
+        <input type="hidden" class="span2" name="username" value="<?php check_string(Param::get('username')) ?>">
     <label>Comment</label>
     <textarea name="body"><?php check_string(Param::get('body')) ?></textarea>
     <br />
     <input type="hidden" name="thread_id" value="<?php check_string($thread->id) ?>">
     <input type="hidden" name="page_next" value="write_end">
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a type="submit" class="btn btn-inverse" href="<?php check_string(url('thread/view', array('thread_id' => $thread->id))) ?>" >Back</a>
 </form>
+
+

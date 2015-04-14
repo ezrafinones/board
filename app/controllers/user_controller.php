@@ -20,14 +20,15 @@ class UserController extends AppController
                     'validate_password' => Param::get('validate_password')
                 );
                 $user = new User($params);
-                $name = Param::get('firstname').Param::get('lastname');
+                $name = $params['firstname'].$params['lastname'];
 
                 if (!$this->isMatchPassword()) {
                     $user->validation_errors['password']['match'] = true;
                 }
                 try {
                     $user->createImage($default_image, Session::get('id'));
-                    if(!(preg_match("/^[a-zA-Z0-9]+$/", Param::get('username'))) || !(preg_match("/^[a-zA-Z ]+$/", $name))) {
+                    if((preg_match("/^[a-zA-Z0-9 ]+$/", Param::get('username'))) || (preg_match("/^[a-zA-Z0-9]+$/", $name))
+                    || (preg_match("/^[a-zA-Z ]+$/", $params['password']))) {
                         $error = true;
                     }
                     $user->register();
@@ -45,12 +46,12 @@ class UserController extends AppController
 
     public function login()
     {
-        $page = Param::get(User::PAGE_NEXT, User::PAGE_LOGIN);
-        $error = false;
-
         if (isset($_SESSION['username'])) {
             redirect(url('user/profile'));
         }
+
+        $page = Param::get(User::PAGE_NEXT, User::PAGE_LOGIN);
+        $error = false;
 
         switch ($page) {
             case User::PAGE_LOGIN:
@@ -109,7 +110,7 @@ class UserController extends AppController
             $error = true;
         }
         $this->set(get_defined_vars());
- 
+
         if ((!isset($_FILES["image"])) && (!isset($_POST["submit"]))) {
             return;
         }
@@ -121,7 +122,7 @@ class UserController extends AppController
         $is_uploaded = true;
         $info =  $_FILES["image"]["tmp_name"];
 
-        if (getimagesize($info) === false && $info > user::MAX_FILE_UPLOAD && $file_type != "jpg" && 
+        if (getimagesize($info) === false && $info > user::MAX_FILE_UPLOAD && $file_type != "jpg" &&
         $file_type != "png" && $file_type != "jpeg" && $file_type != "gif") {
             $is_uploaded = false;
             $error = true;
