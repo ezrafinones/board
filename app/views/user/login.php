@@ -1,4 +1,4 @@
-<h1 style="text-align:center; font-family:Arial,sans-serif">Login</h1>
+<img src="/image/photo.png" style="width:250px; margin:0px 350px; margin-bottom:20px;" alt="">
  
 <?php if ($error): ?>
     <div class="alert alert-block">
@@ -31,6 +31,7 @@
 <?php endif ?>
 
 <form class="well" style="width:250px; margin:auto;" method="post" action="<?php check_string(url('')) ?>">
+<h2 style="text-align:center;">Login</h2>
 <img src="/image/avatar.png" alt="avatar" class="img-circle" style="width:100px; background-color:white; height:100px; margin:0px 75px 20px 75px;">
     <div class="input-prepend">
         <div class="col-xs-6">

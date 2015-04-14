@@ -194,5 +194,6 @@ class UserController extends AppController
         $comments = Comment::getCommentsByUserId($user_id);
 
         $this->set(get_defined_vars());
+        $this->upload_photo();
     }
 }
