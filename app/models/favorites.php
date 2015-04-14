@@ -1,27 +1,14 @@
 <?php
 class Favorites extends AppModel
 {
-    public static function vote($user_id, $comment_id, $action)
-    {
-        $db = DB::conn();
-        try {
-            $db->begin();
-            if ($action === 'favorite') {
-                self::insertFavorites($user_id, $comment_id);
-            } else {
-                self::deleteFavorites($user_id, $comment_id);
-            }
-            $db->commit();
-        } catch (Exception $e) {
-            $db->rollback();
-            throw $e;
-        }
-    }
-
     public static function insertFavorites($user_id, $comment_id) 
     {
         $db = DB::conn();
-        $db->insert('favorites', array('user_id' => $user_id, 'comment_id' => $comment_id));
+        try {
+            $db->insert('favorites', array('user_id' => $user_id, 'comment_id' => $comment_id));
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     public static function deleteFavorites($user_id, $comment_id) 

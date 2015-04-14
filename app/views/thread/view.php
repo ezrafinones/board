@@ -18,10 +18,10 @@
             <?php echo readable_text($v->body) ?>
         </div>
         <?php if (in_array(Session::get('id'), $v->favorites)): ?>
-            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('comment/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => 'unfavorite')))?>">
+            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('comment/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => false)))?>">
                 <i class="icon-star" style="background-image:url('/bootstrap/img/glyphicons-halflings-yellow.png')"></i> <?php echo $v->total_favorites ?></a>
         <?php else: ?>
-            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('comment/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => 'favorite')))?>">
+            <a class="btn btn-small btn-inverse" name="favorites" href="<?php check_string(url('comment/favorites', array('thread_id' => $v->thread_id, 'comment_id'=>$v->id, 'action' => true)))?>">
                 <i class="icon-star icon-white"></i> <?php echo $v->total_favorites ?></a>
         <?php endif ?>
         <?php if (Session::get('id') === $v->user_id): ?>

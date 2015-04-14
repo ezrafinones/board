@@ -57,7 +57,11 @@ class CommentController extends AppController
         $thread_id = Param::get('thread_id');
         $user_id = Session::get('id');
 
-        Favorites::vote($user_id, $comment_id, $action);
+        if ($action == true) {
+            Favorites::insertFavorites($user_id, $comment_id, $action);
+        } else {
+            Favorites::deleteFavorites($user_id, $comment_id, $action);
+        }
         redirect(url('thread/view', array('thread_id' => $thread_id)));
     }
 
