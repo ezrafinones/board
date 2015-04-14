@@ -68,9 +68,7 @@ class User extends AppModel
             'username' => $this->username,
             'password'=> md5($this->password),
         );
-        $db->begin();
         $db->insert('user', $params);
-        $db->commit();
     }
 
     public function login(LoginInfo $login_info)
@@ -80,7 +78,6 @@ class User extends AppModel
             throw new ValidationException('invalid input');
         }
         $db = DB::conn();
-        $db->begin();
         $params = array($this->username, md5($this->password));
         $row = $db->row('SELECT * FROM user WHERE username = ? AND password = ?', $params);
 
@@ -130,11 +127,8 @@ class User extends AppModel
         if (!empty($params)) {
             try {
                 $db = DB::conn();
-                $db->begin();
                 $db->update('user', $params, array('id' => $this->id));
-                $db->commit();
             } catch (Exception $e) {
-                $db->rollback();
                 throw $e;
             }
         }
@@ -151,11 +145,8 @@ class User extends AppModel
 
             if ($row['password'] === md5($this->password) && $this->newpassword === $this->cnewpassword) {
                  try {
-                    $db->begin();
                     $db->update('user', $params, array('id' => $this->id));
-                    $db->commit();
                 } catch(Exception $e) {
-                    $db->rollback();
                     throw $e;
                 }
             } else {
@@ -197,11 +188,8 @@ class User extends AppModel
     {
         $db = DB::conn();
         try {
-            $db->begin();
             $db->update('user', array('image' => $default_image), array('id' => $id));
-            $db->commit();
         } catch (Exception $e) {
-            $db->rollback();
             throw $e;
         }
     }
@@ -210,11 +198,8 @@ class User extends AppModel
     {
         $db = DB::conn();
         try {
-            $db->begin();
             $db->update('user', array('image' => $target_file), array('id' => $id));
-            $db->commit();
         } catch (Exception $e) {
-            $db->rollback();
             throw $e;
         }
     }

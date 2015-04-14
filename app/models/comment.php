@@ -56,12 +56,9 @@ class Comment extends AppModel
         
         try {
             $db = DB::conn();
-            $db->begin();
             $db->query('UPDATE comment SET body = ?, updated = NOW()
                     WHERE id = ?', array($this->body, $comment_id));
-            $db->commit();
         } catch (Exception $e) {
-            $db->rollback();
             throw $e;
         }
     }
@@ -164,7 +161,6 @@ class Comment extends AppModel
     public static function getComments()
     {
         $db = DB::conn();
-
         $rows = $db->rows("SELECT thread_id, COUNT(*) as comment_count FROM comment 
                     GROUP BY thread_id ORDER BY comment_count DESC LIMIT 0, 10");
         return $rows;
