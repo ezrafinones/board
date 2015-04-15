@@ -9,14 +9,6 @@
                 <?php check_string($thread->validation['title']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-
-        <?php if (!empty($comment->validation_errors['username']['length'])): ?>
-            <div><em>Your name</em> must be between
-                <?php check_string($comment->validation['username']['length'][1]) ?> and
-                <?php check_string($comment->validation['username']['length'][2]) ?> characters in length.
-            </div>
-        <?php endif ?>
-
         <?php if (!empty($comment->validation_errors['body']['length'])): ?>
             <div><em>Comment</em> must be between
                 <?php check_string($comment->validation['body']['length'][1]) ?> and
@@ -35,4 +27,5 @@
     <br />
     <input type="hidden" name="page_next" value="create_end">
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a type="submit" class="btn btn-inverse" href="<?php check_string(url('thread/index')) ?>" >Back</a>
 </form>

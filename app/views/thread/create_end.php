@@ -1,5 +1,5 @@
 <h2><?php check_string($thread->title) ?></h2>
- 
+
 <p class="alert alert-success">
     You successfully created.
 </p>

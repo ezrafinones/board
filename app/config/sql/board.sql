@@ -13,17 +13,21 @@ USE board;
                     
 CREATE TABLE IF NOT EXISTS thread (
 id                      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+user_id                 INT UNSIGNED NOT NULL,
 title                   VARCHAR(255) NOT NULL,
 created             	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated                 TIMESTAMP NULL,
 PRIMARY KEY (id)
 )ENGINE=InnoDB;
                     
 CREATE TABLE IF NOT EXISTS comment (
 id                      INT UNSIGNED NOT NULL AUTO_INCREMENT,
 thread_id               INT UNSIGNED NOT NULL,
+user_id                 INT UNSIGNED NOT NULL,
 username                VARCHAR(255) NOT NULL,
 body                    TEXT NOT NULL,
 created                 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated                 TIMESTAMP NULL,
 PRIMARY KEY (id),
 INDEX (thread_id, created)
 )ENGINE=InnoDB;
@@ -38,3 +42,9 @@ password                VARCHAR(20) NOT NULL,
 PRIMARY KEY (id)   
 )ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS favorites (
+id                      INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+user_id                 INT UNSIGNED NOT NULL,
+comment_id              INT UNSIGNED NOT NULL,
+PRIMARY KEY (id)
+)ENGINE=InnoDB;
