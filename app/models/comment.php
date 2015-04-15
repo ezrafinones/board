@@ -2,7 +2,6 @@
 class Comment extends AppModel
 {
     const MIN_LENGTH = 1;
-    const MAX_USERNAME_LENGTH = 30;
     const MAX_BODY_LENGTH = 254;
 
     const PAGE_EDIT = 'edit';
@@ -52,6 +51,10 @@ class Comment extends AppModel
     {
         if (!$comment_id) {
             throw new RecordNotFoundException('Record Not Found');
+        }
+
+        if (!$this->validate()) {
+            throw new ValidationException("Invalid comment");
         }
 
         try {
@@ -145,6 +148,10 @@ class Comment extends AppModel
 
     public static function write($thread_id, $comment, $username, $id)
     {
+        if (!$comment->validate()) {
+            throw new ValidationException("Invalid comment");
+        }
+
         $db = DB::conn();
         $db->query('INSERT INTO comment SET thread_id = ?, username = ?, body = ?, user_id = ?',
                 array($thread_id, $username, $comment->body, $id));

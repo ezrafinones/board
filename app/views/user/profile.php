@@ -8,11 +8,16 @@
     <div class="row-fluid">
         <div class="span4 left" style="border-right:1px solid #E6E6E6">
             <img src=<?php echo $image?> alt="avatar" style="width:150px; height:150px; margin-bottom:5px; margin-top:20px; margin-left:75px; position:absolute 3px">
-
-            <?php if ($error) : ?>
-                <div class="alert alert-block">
-                    <h5 class="alert-heading">Sorry, your file was not uploaded. There was an error in uploading your image.</h5>
-                </div>
+            
+            <?php if (isset($users)): ?>
+                <?php if ($users->hasError()): ?>
+                    <div class="alert alert-block">
+                        <h4 class="alert-heading">Validation error!</h4>
+                        <?php if (!empty($users->validation_errors['image']['error'])): ?>
+                            <div><em>Sorry, your file was not uploaded. There was an error in uploading your image.</em></div>
+                        <?php endif ?>
+                    </div>
+                <?php endif ?>
             <?php endif ?>
 
             <form action="<?php check_string(url('')) ?>" method="post" enctype="multipart/form-data">

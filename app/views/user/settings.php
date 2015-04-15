@@ -1,20 +1,27 @@
 <h3>Account Settings</h3>
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>User Profile Information</h4>
-<?php if ($error_input): ?>
-    <h5 class="alert alert-block">Invalid Input</h5>
+<?php if (isset($name)): ?>
+    <?php if ($name->hasError()): ?>
+        <div class="alert alert-block">
+            <h4 class="alert-heading">Validation error!</h4>
+            <?php if (!empty($name->validation_errors['name']['notmatch'])): ?>
+                <div><em>Invalid input</em></div>
+            <?php endif ?>
+        </div>
+    <?php endif ?>
 <?php endif ?>
 
     <ul style='list-style:none;'>
         <?php foreach ($user as $v): ?>
             <li><?php echo "Edit First Name: "?></li>
-            <input type="text" class="span2" name="firstname" placeholder="<?php check_string($v->firstname) ?>" value="<?php check_string(Param::get('firstname')) ?>">
+            <input type="text" class="span2" name="firstname" value="<?php check_string($v->firstname) ?>" value="<?php check_string(Param::get('firstname')) ?>">
             <br>
             <li><?php echo "Edit Last Name: "?></li>
-            <input type="text" class="span2" name="lastname" placeholder="<?php check_string($v->lastname) ?>" value="<?php check_string(Param::get('lastname')) ?>">
+            <input type="text" class="span2" name="lastname" value="<?php check_string($v->lastname) ?>" value="<?php check_string(Param::get('lastname')) ?>">
             <br>
             <li><?php echo "Edit Email Address: "?></li>
-            <input type="email" class="span2" name="email" placeholder="<?php check_string($v->email) ?>" value="<?php check_string(Param::get('email')) ?>">
+            <input type="email" class="span2" name="email" value="<?php check_string($v->email) ?>" value="<?php check_string(Param::get('email')) ?>">
             <br>
         <?php endforeach ?>
     </ul>
@@ -26,10 +33,14 @@
 <form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>Change Password</h4>
 
-<?php if (!isset($save) && $error): ?>
-    <div class="alert alert-block">
-        <h5 class="alert-heading">Password Mismatch</h5>
-    </div>
+<?php if (isset($users)): ?>
+    <?php if ($users->hasError()): ?>
+        <div class="alert alert-block">
+            <?php if (!empty($users->validation_errors['password']['notmatch'])): ?>
+                <div><em>Password Mismatch</em></div>
+            <?php endif ?>
+        </div>
+    <?php endif ?>
 <?php endif ?>
 
     <ul style='list-style:none;'>

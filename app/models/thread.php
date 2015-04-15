@@ -59,6 +59,12 @@ class Thread extends AppModel
             'user_id' => $this->user_id
         );
 
+        $this->validate();
+        $comment->validate();
+        if ($this->hasError() || $comment->hasError()) {
+            throw new ValidationException("Invalid thread or comment");
+        }
+
         try {
             $db = DB::conn();
             $db->begin();
@@ -83,6 +89,10 @@ class Thread extends AppModel
     {
         if (!$thread_id) {
             throw new RecordNotFoundException('Record Not Found');
+        }
+
+        if (!$this->validate()) {
+            throw new ValidationException("Invalid thread");
         }
 
         try {

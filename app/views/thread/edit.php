@@ -1,10 +1,18 @@
-<form class="well" method="post" action="<?php check_string(url('')) ?>">
 <h4>Edit Thread</h4>
 
-<?php if ($error): ?>
-        <h5 class="alert alert-block">Invalid input</h5>
+<?php if ($thread->hasError() || $comment->hasError()): ?>
+    <div class="alert alert-block">
+        <h4 class="alert-heading">Validation error!</h4>
+        <?php if (!empty($thread->validation_errors['title']['length'])): ?>
+            <div><em>Title</em> must be between
+                <?php check_string($thread->validation['title']['length'][1]) ?> and
+                <?php check_string($thread->validation['title']['length'][2]) ?> characters in length.
+            </div>
+        <?php endif ?>
+    </div>
 <?php endif ?>
 
+<form class="well" method="post" action="<?php check_string(url('')) ?>">
     <ul style='list-style:none;'>
         <?php foreach ($threads as $v): ?>
             <li><?php echo "Title"?></li>

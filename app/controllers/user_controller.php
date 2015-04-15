@@ -5,7 +5,6 @@ class UserController extends AppController
     {
         $page = Param::get(User::PAGE_NEXT, User::PAGE_REGISTER);
         $default_image = "/image/avatar.png";
-        $error = false;
 
         switch ($page) {
             case User::PAGE_REGISTER:
@@ -21,16 +20,19 @@ class UserController extends AppController
                 );
                 $user = new User($params);
                 $name = $params['firstname'].$params['lastname'];
+                User::getAll($params['username'], $user);
 
                 if (!$this->isMatchPassword()) {
                     $user->validation_errors['password']['match'] = true;
                 }
+
+                if (!((preg_match("/^[a-zA-Z0-9]+$/", $params['username'])) || (preg_match("/^[a-zA-Z0-9 ]+$/", $name))
+                || (preg_match("/^[a-zA-Z]+$/", $params['password'])))) {
+                    $user->validation_errors['userinfo']['match'] = true;
+                }
+
                 try {
                     $user->createImage($default_image, Session::get('id'));
-                    if((preg_match("/^[a-zA-Z0-9 ]+$/", Param::get('username'))) || (preg_match("/^[a-zA-Z0-9]+$/", $name))
-                    || (preg_match("/^[a-zA-Z ]+$/", $params['password']))) {
-                        $error = true;
-                    }
                     $user->register();
                 } catch (ValidationException $e) {
                     $page = User::PAGE_REGISTER;
@@ -49,9 +51,7 @@ class UserController extends AppController
         if (isset($_SESSION['username'])) {
             redirect(url('user/profile'));
         }
-
         $page = Param::get(User::PAGE_NEXT, User::PAGE_LOGIN);
-        $error = false;
 
         switch ($page) {
             case User::PAGE_LOGIN:
@@ -69,12 +69,10 @@ class UserController extends AppController
                     $id = $user->login($login_info);
                     Session::set('username', Param::get('username'));
                     Session::set('id', $id);
+                    redirect(url('user/profile'));
                 } catch (ValidationException $e) {
                     $page = User::PAGE_LOGIN;
-                    $error = true;
-                }
-                if (!$error) {
-                    redirect(url('user/profile'));
+                    $user->validation_errors['username']['notexist'] = true;
                 }
                 break;
             default:
@@ -103,11 +101,11 @@ class UserController extends AppController
 
     public function upload_photo()
     {
-        $error = false;
+        $users = new User();
         try {
-            $image = User::getImage(Session::get('id')); 
+            $image = User::getImage(Session::get('id'));
         } catch (RecordNotFoundException $e) {
-            $error = true;
+            $users->validation_errors['image']['error'] = true;
         }
         $this->set(get_defined_vars());
 
@@ -125,14 +123,14 @@ class UserController extends AppController
         if (getimagesize($info) === false && $info > user::MAX_FILE_UPLOAD && $file_type != "jpg" &&
         $file_type != "png" && $file_type != "jpeg" && $file_type != "gif") {
             $is_uploaded = false;
-            $error = true;
+            $users->validation_errors['image']['error'] = true;
         }
 
         if ($is_uploaded == true && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             $target_file = "/" . $target_file;
             User::uploadImage($target_file, Session::get('id'));
         } else {
-            $error = true;
+            $users->validation_errors['image']['error'] = true;
         }
     }
 
@@ -147,33 +145,30 @@ class UserController extends AppController
         $page = Param::get(User::PAGE_NEXT, User::PAGE_SETTINGS);
         $user = User::getRowsById(Session::get('id'));
         $save = Param::get('save');
-        $error = $error_input = false;
+        $name =  new User();
+        $users = new User();
 
         switch ($page) {
             case User::PAGE_SETTINGS:
                 break;
             case User::PAGE_WRITE_SUCCESS:
-                $params = array(
-                    'firstname' => Param::get('firstname'),
-                    'lastname' => Param::get('lastname'),
-                    'email' => Param::get('email'),
-                    'password' => Param::get('password'),
-                    'newpassword' => Param::get('newpassword'),
-                    'confirm_new_password' => Param::get('confirm_new_password')
-                );
-                $users = new User($params);
-                $users->getById(Session::get('id'));
-                $name = $params['firstname'].$params['lastname'];
+                $users->password = Param::get('password');
+                $users->newpassword = Param::get('newpassword');
+                $users->confirm_new_password = Param::get('confirm_new_password');
 
+                $email = Param::get('email');
+                $name->firstname = Param::get('firstname');
+                $name->lastname = Param::get('lastname');
+                $name->getById(Session::get('id'));
                 try {
-                    if(!(preg_match("/^[a-zA-Z0-9]+$/", $name))) {
-                        $error_input = true;
+                    if(!(preg_match("/^[a-zA-Z ]+$/", $name->firstname)) || !(preg_match("/^[a-zA-Z ]+$/", $name->lastname))) {
+                        $name->validation_errors['name']['notmatch'] = true;
                     }
-                    $users->updateProfile();
+                    $name->updateProfile($email);
                     $users->updatePassword(Session::get('id'));
                 } catch (ValidationException $e) {
                         $page = User::PAGE_SETTINGS;
-                        $error = true;
+                        $users->validation_errors['password']['notmatch'] = true;
                 }
                 break;
             default:
@@ -185,7 +180,7 @@ class UserController extends AppController
     }
 
     public function user_profile()
-    {     
+    {
         if (!Session::get('username')) {
             redirect(url('user/login'));
         }

@@ -1,8 +1,8 @@
 <h1>User Registration</h1>
 
-<?php if ($error): ?>
+<!--<?php //if ($error): ?>
     <h5 class="alert alert-block">Invalid Input</h5>
-<?php endif ?>
+<?php //endif ?> -->
 
 <?php if (isset($user)): ?>
     <?php if ($user->hasError()): ?>
@@ -10,6 +10,10 @@
             <h4 class="alert-heading">Validation error!</h4>
             <?php if (!empty($user->validation_errors['user']['exist'])): ?>
                 <div><em>You have already have existing account</em>
+                </div>
+            <?php endif ?>
+            <?php if (!empty($user->validation_errors['userinfo']['match'])): ?>
+                <div><em>Invalid Input</em>
                 </div>
             <?php endif ?>
             <?php if (!empty($user->validation_errors['firstname']['length'])): ?>

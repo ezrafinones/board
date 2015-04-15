@@ -48,19 +48,21 @@ class User extends AppModel
         ),
     );
 
-    public function register()
+    public static function getAll($username, $user)
     {
-        $this->validate();
         $db = DB::conn();
-        $row = $db->row('SELECT * FROM user WHERE username = ?', array($this->username));
+        $row = $db->row('SELECT * FROM user WHERE username = ?', array($username));
         
         if ($row) {
-            $this->validation_errors['user']['exist'] = true;
+            $user->validation_errors['user']['exist'] = true;
         }
-
-        if ($this->hasError()) {
+    }
+    public function register()
+    {
+        if (!$this->validate()) {
             throw new ValidationException('invalid input');
         }
+        $db = DB::conn();
         $params = array(
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
@@ -73,16 +75,16 @@ class User extends AppModel
 
     public function login(LoginInfo $login_info)
     {
-        $login_info->validate();
-        if ($login_info->hasError()) {
+        if (!$this->validate()) {
             throw new ValidationException('invalid input');
         }
+
         $db = DB::conn();
         $params = array($this->username, md5($this->password));
         $row = $db->row('SELECT * FROM user WHERE username = ? AND password = ?', $params);
 
         if (!$row) {
-            throw new RecordNotFoundException('No Record Found');
+            throw new RecordNotFoundException('No record found');
         }
         return $row['id'];
     }
@@ -110,14 +112,17 @@ class User extends AppModel
         $this->id = $id['id'];
     }
 
-    public function updateProfile()
+    public function updateProfile($email)
     {
+        if (!$this->validate()) {
+            throw new ValidationException('invalid input');
+        }
+
         $params = array();
         $profile = array('firstname' => $this->firstname,
                     'lastname' => $this->lastname,
-                    'email' => $this->email,
+                    'email' => $email,
         );
-
         foreach ($profile as $k => $v) {
             if (!empty($v)) {
                 $params[$k] = $v;

@@ -7,7 +7,6 @@ class CommentController extends AppController
         $page = Param::get(Comment::PAGE_NEXT, Comment::PAGE_EDIT);
         $comment_id = Param::get('id');
         $comments = Comment::getById($comment_id);
-        $error = false;
 
         switch ($page) {
             case Comment::PAGE_EDIT:
@@ -16,9 +15,8 @@ class CommentController extends AppController
                 $comment->body = Param::get('body');
                 try {
                     $comment->edit($comment_id);
-                } catch (RecordNotFoundException $e) {
-                    $page = Comment::PAGE_EDIT;
-                    $error = true;
+                } catch (ValidationException $e) {
+                    $page = Thread::PAGE_EDIT;
                 }
                 break;
             default:

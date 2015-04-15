@@ -46,16 +46,16 @@ class ThreadController extends AppController
         $thread_id = Param::get('thread_id');
         $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT);
-            
+
         switch ($page) {
             case Thread::PAGE_WRITE:
                 break;
             case Thread::PAGE_WRITE_END:
                 $comment->body = Param::get('body');
-                if (!$comment->validate()) {
-                    $page = Thread::PAGE_WRITE;
-                } else {
+                try {
                     Comment::write($thread_id, $comment, Session::get('username'), Session::get('id'));
+                } catch (ValidationException $e) {
+                    $page = Thread::PAGE_WRITE;
                 }
                 break;
             default:
@@ -82,12 +82,10 @@ class ThreadController extends AppController
                 $comment->username = Param::get('username');
                 $comment->body = Param::get('body');
 
-                $thread->validate();
-                $comment->validate();
-                if ($thread->hasError() || $comment->hasError()) {
-                    $page = Thread::PAGE_CREATE;
-                } else {
+                try {
                     $thread->create($comment, Session::get('username'), Session::get('id'));
+                } catch (ValidationException $e) {
+                    $page = Thread::PAGE_CREATE;
                 }
                 break;
             default:
@@ -101,21 +99,21 @@ class ThreadController extends AppController
     public function edit()
     {
         $thread = new Thread();
+        $comment = new Comment();
         $page = Param::get(Thread::PAGE_NEXT, Thread::PAGE_EDIT);
         $thread_id = Param::get('id');
         $threads = Thread::getById($thread_id);
-        $error = false;
 
         switch ($page) {
             case Thread::PAGE_EDIT:
                 break;
             case Thread::PAGE_WRITE_THREAD:
                 $thread->title = Param::get('title');
+
                 try {
                     $thread->edit($thread_id);
-                } catch (RecordNotFoundException $e) {
-                        $page = Thread::PAGE_EDIT;
-                        $error = true;
+                } catch (ValidationException $e) {
+                    $page = Thread::PAGE_EDIT;
                 }
                 break;
             default:

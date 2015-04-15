@@ -1,18 +1,14 @@
 <img src="/image/photo.png" style="width:250px; margin:0px 350px; margin-bottom:20px;" alt="">
- 
-<?php if ($error): ?>
-    <div class="alert alert-block">
-        <h4 class="alert-heading">Username and Password Authentication Error</h4>
-    </div>
-<?php endif ?>
 
 <?php if (isset($user)): ?>
     <?php if ($user->hasError()): ?>
         <div class="alert alert-block">
             <h4 class="alert-heading">Validation error!</h4>
-
+            <?php if (!empty($user->validation_errors['username']['notexist'])): ?>
+                <div><em>Username and password authentication error.</em></div>
+            <?php endif ?>
             <?php if (!empty($user->validation_errors['username']['length'])): ?>
-                <div><em>First Name</em> must be
+                <div><em>Username</em> must be
                 between
                     <?php check_string($user->validation['username']['length'][1]) ?> and
                     <?php check_string($user->validation['username']['length'][2]) ?> characters in length.
@@ -20,7 +16,7 @@
             <?php endif ?>
 
             <?php if (!empty($user->validation_errors['password']['length'])): ?>
-                <div><em>Last Name</em> must be
+                <div><em>Password</em> must be
                     between
                     <?php check_string($user->validation['password']['length'][1]) ?> and
                     <?php check_string($user->validation['password']['length'][2]) ?> characters in length.

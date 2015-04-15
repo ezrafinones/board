@@ -9,14 +9,6 @@
                 <?php check_string($thread->validation['title']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-
-        <?php if (!empty($comment->validation_errors['username']['length'])): ?>
-            <div><em>Your name</em> must be between
-                <?php check_string($comment->validation['username']['length'][1]) ?> and
-                <?php check_string($comment->validation['username']['length'][2]) ?> characters in length.
-            </div>
-        <?php endif ?>
-
         <?php if (!empty($comment->validation_errors['body']['length'])): ?>
             <div><em>Comment</em> must be between
                 <?php check_string($comment->validation['body']['length'][1]) ?> and
